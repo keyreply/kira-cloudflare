@@ -1,0 +1,3066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kira - Complete AI Marketing System | Interactive + Analytics</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --cyan: #06b6d4;
+            --pink: #ec4899;
+            --orange: #f97316;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-hover: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 64px;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            z-index: 100;
+            border-right: 1px solid var(--border);
+            box-shadow: 1px 0 2px rgba(0,0,0,0.02);
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: white;
+            margin-bottom: 32px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-item {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+            font-size: 20px;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-hover);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: #dbeafe;
+            color: var(--primary);
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: var(--danger);
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Conversations Panel */
+        .conversations-panel {
+            width: 340px;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 12px 10px 36px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .mode-btn.active {
+            background: white;
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .view-selector {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .view-tab {
+            flex: 1;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+        }
+
+        .view-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .section-header {
+            padding: 12px 20px;
+            background: var(--bg-secondary);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .conversation-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            gap: 12px;
+        }
+
+        .conversation-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .conversation-item.active {
+            background: var(--bg-secondary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .conversation-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 15px;
+            color: white;
+        }
+
+        .conversation-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .conversation-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .conversation-badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-active { background: #dcfce7; color: #166534; }
+        .badge-completed { background: #dbeafe; color: #1e40af; }
+        .badge-edge { background: #fce7f3; color: #9f1239; }
+        .badge-interactive { background: #fef3c7; color: #92400e; }
+
+        .conversation-preview {
+            font-size: 13px;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-bottom: 4px;
+        }
+
+        .conversation-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .conversation-day {
+            font-size: 12px;
+            padding: 2px 6px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+        }
+
+        .chat-info h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .chat-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: white;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-hover);
+        }
+
+        .action-btn.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .action-btn.primary:hover {
+            background: #0b5ed7;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: var(--bg-secondary);
+        }
+
+        .message-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-group.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .avatar-kira {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .avatar-user {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .avatar-system {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .message-content {
+            max-width: 60%;
+        }
+
+        .message-group.user .message-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .message-bubble {
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+
+        .message-group.kira .message-bubble {
+            background: #dbeafe;
+            border: none;
+            color: var(--text-primary);
+        }
+
+        .message-group.user .message-bubble {
+            background: var(--primary);
+            color: white;
+        }
+
+        .message-group.system .message-bubble {
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            color: #92400e;
+            font-size: 13px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 0 4px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .voice-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 16px;
+            border-radius: 12px;
+            color: white;
+            margin-top: 8px;
+        }
+
+        .voice-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .voice-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .voice-info h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .voice-info p {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .voice-text {
+            font-size: 13px;
+            line-height: 1.6;
+            opacity: 0.95;
+            margin-bottom: 12px;
+        }
+
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .play-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .response-options {
+            margin-top: 16px;
+            padding: 16px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .options-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .option-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-btn {
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            text-align: left;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .option-btn-positive {
+            border-color: #86efac;
+            background: #f0fdf4;
+        }
+
+        .option-btn-positive:hover {
+            border-color: var(--success);
+            background: #dcfce7;
+        }
+
+        .option-btn-negative {
+            border-color: #fde68a;
+            background: #fefce8;
+        }
+
+        .option-btn-negative:hover {
+            border-color: var(--warning);
+            background: #fef3c7;
+        }
+
+        /* Chat Input */
+        .chat-input-container {
+            padding: 16px 24px;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+            min-height: 44px;
+            max-height: 120px;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            background: #0b5ed7;
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        /* Right Panel */
+        .right-panel {
+            width: 380px;
+            background: var(--bg-primary);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .panel-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: var(--bg-secondary);
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .status-card {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .status-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-value {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tag-item {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tag-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tag-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .tag-icon.status { background: #dbeafe; }
+        .tag-icon.intent { background: #fef3c7; }
+        .tag-icon.engage { background: #dcfce7; }
+
+        .tag-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .tag-help {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--bg-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tag-tooltip {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            width: 300px;
+            background: #1e293b;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .tag-help:hover .tag-tooltip {
+            display: block;
+        }
+
+        .tag-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            right: 6px;
+            border: 6px solid transparent;
+            border-top-color: #1e293b;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            color: #60a5fa;
+            margin-bottom: 6px;
+        }
+
+        .log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .log-item {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 14px;
+            border-left: 3px solid var(--warning);
+            animation: slideIn 0.3s ease;
+        }
+
+        .log-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .log-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .log-detail {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            white-space: pre;
+            overflow-x: auto;
+            margin-top: 8px;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+            background: var(--bg-secondary);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dashboard-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid transparent;
+        }
+
+        .metric-card.primary { border-left-color: var(--primary); }
+        .metric-card.success { border-left-color: var(--success); }
+        .metric-card.warning { border-left-color: var(--warning); }
+        .metric-card.info { border-left-color: var(--cyan); }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: var(--bg-secondary);
+        }
+
+        .metric-content {
+            flex: 1;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .metric-change {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .metric-change.positive {
+            color: var(--success);
+        }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-card.wide {
+            grid-column: span 2;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .funnel-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .funnel-stage {
+            margin: 0 auto;
+        }
+
+        .funnel-bar {
+            padding: 16px 24px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-weight: 500;
+        }
+
+        .funnel-label {
+            font-size: 14px;
+        }
+
+        .funnel-value {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Complete conversation data - ALL 7 USE CASES
+        const allConversationData = [
+            // ========== Use Case I-1: Kevin - Day 0 Activation ==========
+            {
+                id: 1,
+                name: "Kevin",
+                title: "Day 0 - Activation & The Hook",
+                avatar: { bg: "#3b82f6", initials: "KV" },
+                statusBadge: "active",
+                day: 0,
+                preview: "Pattern interrupt activation...",
+                steps: [
+                    {
+                        type: "kira",
+                        content: "Hey Kevin! Chris Chan here. Hope all is well? Love to quickly check something with you now, convenient?",
+                        time: "10:05 AM",
+                        options: [
+                            { text: "Yes, what's up?", type: "positive" },
+                            { text: "Not now, busy", type: "negative" },
+                            { text: "Who is this? / What's this about?", type: "neutral" }
+                        ]
+                    },
+                    // Branch 1: "Yes, what's up?" → Snooker Metaphor
+                    {
+                        trigger: "Yes, what's up?",
+                        type: "kira",
+                        content: "Chris here... I've been watching how the top 1% set themselves up for next year. It's like Snooker — they aren't just playing the current shot; they are already lining up the next three. Curious — looking at your business right now, how's your momentum for the 'next shot'?",
+                        time: "10:07 AM",
+                        options: [
+                            { text: "Going okay, but tired", type: "neutral" },
+                            { text: "Pretty good actually", type: "positive" },
+                            { text: "Struggling honestly", type: "negative" }
+                        ]
+                    },
+                    {
+                        trigger: "Going okay, but tired",
+                        type: "kira",
+                        content: "Totally get that. December fatigue is real. Would you like me to share a quick 2-minute Reflection Checklist to review your final sprint goals before we plan Q1?",
+                        time: "10:11 AM",
+                        options: [
+                            { text: "Yes please", type: "positive" },
+                            { text: "Maybe later", type: "negative" }
+                        ]
+                    },
+                    {
+                        trigger: "Yes please",
+                        type: "system",
+                        content: "✓ Checklist link sent. User tagged: Interested_FinalSprint2025. Moved to Day 3 Active Queue.",
+                        time: "10:12 AM"
+                    },
+                    {
+                        trigger: "Maybe later",
+                        type: "kira",
+                        content: "No worries. I'll check back with you in a few days. Take care!",
+                        time: "10:12 AM"
+                    },
+                    {
+                        trigger: "Maybe later",
+                        type: "system",
+                        content: "⏱️ User tagged: Warm_Lead. 3-day timer set for follow-up.",
+                        time: "10:12 AM"
+                    },
+                    {
+                        trigger: "Pretty good actually",
+                        type: "kira",
+                        content: "Love to hear it! Since you're already moving forward, want to accelerate? I've got a Final Sprint Momentum Clinic coming up. Interested?",
+                        time: "10:11 AM",
+                        options: [
+                            { text: "Tell me more", type: "positive" },
+                            { text: "Not now", type: "negative" }
+                        ]
+                    },
+                    {
+                        trigger: "Tell me more",
+                        type: "kira",
+                        content: "It's a 90-min intensive where we map your 2026 trajectory. Free for alumni. Shall I send the details?",
+                        time: "10:13 AM",
+                        options: [
+                            { text: "Yes, send it", type: "positive" },
+                            { text: "I'll think about it", type: "neutral" }
+                        ]
+                    },
+                    {
+                        trigger: "Struggling honestly",
+                        type: "kira",
+                        content: "Appreciate the honesty. You're not alone — Q4 is tough. Want a quick strategy call to help you finish strong?",
+                        time: "10:11 AM",
+                        options: [
+                            { text: "Yes, that would help", type: "positive" },
+                            { text: "No, I'm good", type: "negative" }
+                        ]
+                    },
+                    {
+                        trigger: "Yes, that would help",
+                        type: "system",
+                        content: "✓ Strategy call link sent. User tagged: Struggling_NeedsSupport, High_Priority.",
+                        time: "10:13 AM"
+                    },
+                    {
+                        trigger: "No, I'm good",
+                        type: "kira",
+                        content: "Understood. If things change, I'm here. Wishing you a strong finish.",
+                        time: "10:13 AM"
+                    },
+                    // Branch 2: "Not now, busy"
+                    {
+                        trigger: "Not now, busy",
+                        type: "kira",
+                        content: "No worries at all. Just wanted to drop a quick 'Snooker Strategy' reflection for your end-of-year sprint. Shall I text the link so you can check it later?",
+                        time: "10:08 AM",
+                        options: [
+                            { text: "Yes, send it", type: "positive" },
+                            { text: "Not interested", type: "negative" }
+                        ]
+                    },
+                    {
+                        trigger: "Yes, send it",
+                        type: "system",
+                        content: "✓ Link sent. User tagged: Interested_FinalSprint2025. Will follow up in Day 3.",
+                        time: "10:09 AM"
+                    },
+                    {
+                        trigger: "Not interested",
+                        type: "kira",
+                        content: "Got it. Thanks for your time. If anything changes, feel free to reach out.",
+                        time: "10:09 AM"
+                    },
+                    {
+                        trigger: "Not interested",
+                        type: "system",
+                        content: "✓ User tagged: Low_Interest. Paused for 30 days.",
+                        time: "10:09 AM"
+                    },
+                    // Branch 3: "Who is this?"
+                    {
+                        trigger: "Who is this? / What's this about?",
+                        type: "kira",
+                        content: "Apologies, it's Chris Chan (PPP Academy). Updating my contacts and wanted to see how your Q4 momentum is holding up. Good time to chat?",
+                        time: "10:08 AM",
+                        options: [
+                            { text: "Yes, what's up?", type: "positive" },
+                            { text: "Not now", type: "negative" }
+                        ]
+                    },
+                    {
+                        trigger: "Not now",
+                        type: "kira",
+                        content: "No problem. I'll reach out again in the new year. Happy holidays!",
+                        time: "10:10 AM"
+                    },
+                    {
+                        trigger: "Not now",
+                        type: "system",
+                        content: "✓ User tagged: Identity_Clarified. Follow up in January 2026.",
+                        time: "10:10 AM"
+                    }
+                ],
+                messages: [
+                    { type: "kira", content: "Hey Kevin! Chris Chan here. Hope all is well? Love to quickly check something with you now, convenient?", time: "10:05 AM" },
+                    { type: "user", content: "Yes, what's up?", time: "10:06 AM" },
+                    { type: "kira", content: "Chris here... I've been watching how the top 1% set themselves up for next year. It's like Snooker — they aren't just playing the current shot; they are already lining up the next three. Curious — looking at your business right now, how's your momentum for the 'next shot'?", time: "10:07 AM" },
+                    { type: "user", content: "Going okay, but tired.", time: "10:10 AM" },
+                    { type: "kira", content: "Totally get that. December fatigue is real. Would you like me to share a quick 2-minute Reflection Checklist to review your final sprint goals before we plan Q1?", time: "10:11 AM" },
+                    { type: "user", content: "Yes please.", time: "10:12 AM" },
+                    { type: "system", content: "✓ Checklist link sent. User tagged: Interested_FinalSprint2025. Moved to Day 3 Active Queue.", time: "10:12 AM" }
+                ],
+                tags: [
+                    { name: "Interested_FinalSprint2025", type: "status", icon: "📊", tooltip: { title: "Interested in Final Sprint 2025", description: "User explicitly requested value content during Day 0 engagement." }},
+                    { name: "Active_Dialogue", type: "engage", icon: "💬", tooltip: { title: "Active in Conversation", description: "User is responding positively and engaging." }},
+                    { name: "LowEnergy", type: "intent", icon: "😴", tooltip: { title: "Low Energy State", description: "User expressed fatigue. Sales approach should emphasize empathy." }}
+                ],
+                logs: [
+                    { time: "10:06 AM", title: "Intent Analysis", detail: "User responded positively - POSITIVE intent detected" },
+                    { time: "10:10 AM", title: "Intent Analysis", detail: "Low energy state detected - applying empathy strategy" },
+                    { time: "10:12 AM", title: "Tag Applied", detail: "Applied [STATUS]: Interested_FinalSprint2025" },
+                    { time: "10:12 AM", title: "Queue Movement", detail: "Moved to Day 3 Active Queue" }
+                ],
+                currentStatus: { intent: "POSITIVE", nextAction: "Day 3 Webinar Invite", queue: "Day 3 Active Queue" }
+            },
+
+            // ========== Use Case I-2: Tom - Day 3 & 7 Soft Objection ==========
+            {
+                id: 2,
+                name: "Tom",
+                title: "Day 3 & 7 - Soft Objection & Busy Loop",
+                avatar: { bg: "#8b5cf6", initials: "TM" },
+                statusBadge: "active",
+                day: "3-7",
+                preview: "4-day persistence loop...",
+                steps: [
+                    // Day 3 Initial Contact
+                    { 
+                        type: "kira", 
+                        content: "Hey Tom, just checking — would you like me to send you an invite to our private Final Sprint Momentum Clinic this week?", 
+                        time: "Day 3, 2:30 PM", 
+                        options: [
+                            { text: "Yes, send the invite", type: "positive" },
+                            { text: "Not now, too busy", type: "negative" },
+                            { text: "Is it recorded? / Can I watch later?", type: "neutral" }
+                        ]
+                    },
+                    // Branch 1: "Yes, send the invite"
+                    {
+                        trigger: "Yes, send the invite",
+                        type: "kira",
+                        content: "Great! Here's your exclusive invite link: [Link]. See you there!",
+                        time: "Day 3, 2:35 PM"
+                    },
+                    {
+                        trigger: "Yes, send the invite",
+                        type: "system",
+                        content: "✓ Registration link sent. User tagged: Webinar_Reg. Calendar invite sent.",
+                        time: "Day 3, 2:35 PM"
+                    },
+                    // Branch 2: "Not now, too busy" → Triggers Day 7
+                    {
+                        trigger: "Not now, too busy",
+                        type: "kira",
+                        content: "No worries at all. I'll circle back when things settle.",
+                        time: "Day 3, 2:35 PM"
+                    },
+                    {
+                        trigger: "Not now, too busy",
+                        type: "system",
+                        content: "⏱️ Soft objection detected. User tagged: Warm_Lead. 4-day timer started for automatic follow-up.",
+                        time: "Day 3, 2:35 PM"
+                    },
+                    // Branch 3: "Is it recorded?"
+                    {
+                        trigger: "Is it recorded? / Can I watch later?",
+                        type: "kira",
+                        content: "We prioritize live interaction for best results. But register anyway — if we do release a recap, you'll be first on the list. Shall I send the link?",
+                        time: "Day 3, 2:35 PM",
+                        options: [
+                            { text: "Yes, send it", type: "positive" },
+                            { text: "No thanks", type: "negative" }
+                        ]
+                    },
+                    {
+                        trigger: "Yes, send it",
+                        type: "system",
+                        content: "✓ Registration link sent. User tagged: Webinar_Reg (Recording Interest).",
+                        time: "Day 3, 2:37 PM"
+                    },
+                    {
+                        trigger: "No thanks",
+                        type: "kira",
+                        content: "Understood. If you change your mind, the offer stands. Have a great week!",
+                        time: "Day 3, 2:37 PM"
+                    },
+                    {
+                        trigger: "No thanks",
+                        type: "system",
+                        content: "✓ User declined. Tagged: Followup_Jan_2026.",
+                        time: "Day 3, 2:37 PM"
+                    },
+                    // Day 7 Follow-up (triggered by "Not now, too busy")
+                    {
+                        trigger: "Not now, too busy",
+                        type: "kira",
+                        content: "Hey Tom, quick reminder — that Final Sprint Clinic goes live soon. Still want me to keep a seat for you? Or should I give it to someone else?",
+                        time: "Day 7, 10:05 AM",
+                        options: [
+                            { text: "Yes, keep it!", type: "positive" },
+                            { text: "Give it to someone else", type: "negative" },
+                            { text: "I'll think about it", type: "neutral" }
+                        ]
+                    },
+                    {
+                        trigger: "Yes, keep it!",
+                        type: "kira",
+                        content: "Perfect. Your spot is saved. Link coming right up: [Link]",
+                        time: "Day 7, 10:08 AM"
+                    },
+                    {
+                        trigger: "Yes, keep it!",
+                        type: "system",
+                        content: "✓ Registration link sent. User tagged: Webinar_Reg, Recovered_Lead.",
+                        time: "Day 7, 10:08 AM"
+                    },
+                    {
+                        trigger: "Give it to someone else",
+                        type: "kira",
+                        content: "Got it. If you change your mind, the door is always open. Wishing you a strong finish to the year.",
+                        time: "Day 7, 10:08 AM"
+                    },
+                    {
+                        trigger: "Give it to someone else",
+                        type: "system",
+                        content: "✓ User declined. Tagged: Followup_Jan_2026. Campaign paused.",
+                        time: "Day 7, 10:08 AM"
+                    },
+                    {
+                        trigger: "I'll think about it",
+                        type: "kira",
+                        content: "Totally understand. Thinking is good — but don't let it become stalling. December is your launchpad. Want me to send a quick summary?",
+                        time: "Day 7, 10:08 AM",
+                        options: [
+                            { text: "Yes, send summary", type: "positive" },
+                            { text: "No, I'm good", type: "negative" }
+                        ]
+                    },
+                    {
+                        trigger: "Yes, send summary",
+                        type: "system",
+                        content: "✓ Summary PDF sent. User tagged: Hesitation_Followup.",
+                        time: "Day 7, 10:10 AM"
+                    },
+                    {
+                        trigger: "No, I'm good",
+                        type: "kira",
+                        content: "Alright. Best of luck with the sprint. We'll reconnect in the new year.",
+                        time: "Day 7, 10:10 AM"
+                    },
+                    {
+                        trigger: "No, I'm good",
+                        type: "system",
+                        content: "✓ User declined multiple times. Tagged: Followup_Feb_2026.",
+                        time: "Day 7, 10:10 AM"
+                    }
+                ],
+                messages: [
+                    { type: "kira", content: "Hey Tom, just checking — would you like me to send you an invite to our private Final Sprint Momentum Clinic this week?", time: "Day 3, 2:30 PM" },
+                    { type: "user", content: "Not now, too busy.", time: "Day 3, 2:45 PM" },
+                    { type: "kira", content: "No worries at all. I'll circle back when things settle.", time: "Day 3, 2:45 PM" },
+                    { type: "system", content: "⏱️ Soft objection detected. User tagged: Warm_Lead. 4-day timer started.", time: "Day 3, 2:45 PM" },
+                    { type: "kira", content: "Hey Tom, quick reminder — that Final Sprint Clinic goes live soon. Still want me to keep a seat for you? Or should I give it to someone else?", time: "Day 7, 10:05 AM" },
+                    { type: "user", content: "Yes, keep it!", time: "Day 7, 10:08 AM" },
+                    { type: "kira", content: "Perfect. Your spot is saved. Link coming right up: [Link]", time: "Day 7, 10:08 AM" },
+                    { type: "system", content: "✓ Registration link sent. User tagged: Webinar_Reg, Recovered_Lead.", time: "Day 7, 10:08 AM" }
+                ],
+                tags: [
+                    { name: "Warm_Lead", type: "status", icon: "🔥", tooltip: { title: "Warm Lead - Timing Conflict", description: "User expressed temporary unavailability. System will re-engage after 4-day wait with scarcity reminder." }},
+                    { name: "Recovered_Lead", type: "status", icon: "🔄", tooltip: { title: "Successfully Recovered Lead", description: "User converted after initial soft objection. High-value lead showing persistence." }}
+                ],
+                logs: [
+                    { time: "Day 3, 2:45 PM", title: "Intent Analysis", detail: "Soft objection detected - User cited timing/busy as barrier" },
+                    { time: "Day 3, 2:45 PM", title: "Timer Started", detail: "4-day wait period initiated before re-engagement" },
+                    { time: "Day 7, 10:08 AM", title: "Conversion Success", detail: "User converted after persistence - Recovered Lead" }
+                ],
+                currentStatus: { intent: "POSITIVE - Recovered", nextAction: "Day 14 Event Reminder", queue: "Webinar Confirmed" }
+            },
+
+            // ========== Use Case I-3: Sarah - Day 7 Hard Rejection ==========
+            {
+                id: 3,
+                name: "Sarah",
+                title: "Day 7 - Hard Rejection Processing",
+                avatar: { bg: "#ef4444", initials: "SJ" },
+                statusBadge: "completed",
+                day: 7,
+                preview: "Compliance & opt-out...",
+                steps: [
+                    {
+                        type: "kira",
+                        content: "Hey Sarah, quick reminder — that Final Sprint Clinic goes live soon. Still want me to keep a seat for you?",
+                        time: "11:30 AM",
+                        options: [
+                            { text: "Not interested at all", type: "negative" },
+                            { text: "I'm travelling until Feb", type: "neutral" },
+                            { text: "Stop texting me", type: "negative" }
+                        ]
+                    },
+                    // Branch 1: Hard rejection
+                    {
+                        trigger: "Not interested at all",
+                        type: "kira",
+                        content: "Respect that. Thanks for the honesty. Wishing you all the best.",
+                        time: "11:35 AM"
+                    },
+                    {
+                        trigger: "Not interested at all",
+                        type: "system",
+                        content: "⚠️ Hard rejection detected. User tagged: Do_Not_Contact. Global unsubscribe initiated.",
+                        time: "11:35 AM"
+                    },
+                    // Branch 2: Logistical delay
+                    {
+                        trigger: "I'm travelling until Feb",
+                        type: "kira",
+                        content: "Safe travels! I'll reconnect in early Feb to see if the timing works better then.",
+                        time: "11:35 AM"
+                    },
+                    {
+                        trigger: "I'm travelling until Feb",
+                        type: "system",
+                        content: "✓ User tagged: Followup_Feb_2026. Current campaign paused.",
+                        time: "11:35 AM"
+                    },
+                    // Branch 3: Explicit opt-out
+                    {
+                        trigger: "Stop texting me",
+                        type: "kira",
+                        content: "Understood. Apologies for the intrusion. I've removed you from this list. Take care.",
+                        time: "11:35 AM"
+                    },
+                    {
+                        trigger: "Stop texting me",
+                        type: "system",
+                        content: "⚠️ Unsubscribe request detected. All communications halted. Added to global suppression list.",
+                        time: "11:35 AM"
+                    }
+                ],
+                messages: [
+                    { type: "kira", content: "Hey Sarah, quick reminder — that Final Sprint Clinic goes live soon. Still want me to keep a seat for you?", time: "11:30 AM" },
+                    { type: "user", content: "Stop texting me. Not interested.", time: "11:35 AM" },
+                    { type: "kira", content: "Understood. Apologies for the intrusion. I've removed you from this list. Take care.", time: "11:35 AM" },
+                    { type: "system", content: "⚠️ Unsubscribe request detected. All communications halted. Added to global suppression list.", time: "11:35 AM" }
+                ],
+                tags: [
+                    { name: "Do_Not_Contact", type: "status", icon: "🚫", tooltip: { title: "Global Do Not Contact", description: "User exercised right to opt-out. Immediate cessation of all contact required." }},
+                    { name: "Hard_Rejection", type: "intent", icon: "❌", tooltip: { title: "Hard Rejection Intent", description: "User has zero interest. Relationship terminated. Critical for data hygiene." }}
+                ],
+                logs: [
+                    { time: "11:35 AM", title: "Intent Analysis", detail: "Hard rejection with explicit opt-out keywords detected" },
+                    { time: "11:35 AM", title: "Global Unsubscribe", detail: "Added to suppression list. Removed from all workflows." }
+                ],
+                currentStatus: { intent: "HARD_REJECTION", nextAction: "None - Permanently Opted Out", queue: "Suppression List" }
+            },
+
+            // ========== Use Case I-4: Alex - Day 10 Voice AI ==========
+            {
+                id: 4,
+                name: "Alex",
+                title: "Day 10 - Voice AI Emotional Breakthrough",
+                avatar: { bg: "#10b981", initials: "AR" },
+                statusBadge: "active",
+                day: 10,
+                preview: "Emotional voice connection...",
+                steps: [
+                    {
+                        type: "kira",
+                        content: "Hey Alex! The Final Sprint Momentum Clinic is happening this week. We've saved a spot for you — are you in a position to join us?",
+                        time: "11:40 AM",
+                        options: [
+                            { text: "Yes, I'm in", type: "positive" },
+                            { text: "I'll think about it", type: "neutral" },
+                            { text: "Not sure / Maybe later", type: "neutral" }
+                        ]
+                    },
+                    // Branch 1: Direct confirmation
+                    {
+                        trigger: "Yes, I'm in",
+                        type: "kira",
+                        content: "Awesome! Your spot is confirmed. Link sent: [Link]. See you inside!",
+                        time: "11:42 AM"
+                    },
+                    {
+                        trigger: "Yes, I'm in",
+                        type: "system",
+                        content: "✓ User confirmed. Tagged: Confirmed_Attendee.",
+                        time: "11:42 AM"
+                    },
+                    // Branch 2: Hesitation → Voice AI trigger
+                    {
+                        trigger: "I'll think about it",
+                        type: "system",
+                        content: "🎙️ Hesitation detected. Triggering Voice AI breakthrough protocol via ElevenLabs...",
+                        time: "11:46 AM"
+                    },
+                    {
+                        trigger: "I'll think about it",
+                        type: "kira",
+                        content: "Listen to this quickly 🎙️",
+                        time: "11:46 AM",
+                        hasVoice: true,
+                        voiceContent: {
+                            title: "Personal Message from Chris",
+                            duration: "45 seconds",
+                            transcript: "Alex... thinking often looks like stalling. And stalling in business doesn't mean you're being cautious — it means the market is moving while you're standing still. December isn't a month to 'think about it' — it's your launchpad. This clinic isn't about learning more theory. It's about calibrating your trajectory for 2026 before everyone else wakes up in January scrambling. You in?"
+                        },
+                        options: [
+                            { text: "Okay, send the link", type: "positive" },
+                            { text: "Can't listen now", type: "negative" },
+                            { text: "Still not sure", type: "neutral" }
+                        ]
+                    },
+                    {
+                        trigger: "Okay, send the link",
+                        type: "kira",
+                        content: "Perfect. Here's your direct access: [Link]. Let's get you clear!",
+                        time: "11:50 AM"
+                    },
+                    {
+                        trigger: "Okay, send the link",
+                        type: "system",
+                        content: "✓ Voice breakthrough successful! User tagged: Voice_Converted. Registration confirmed.",
+                        time: "11:50 AM"
+                    },
+                    {
+                        trigger: "Can't listen now",
+                        type: "kira",
+                        content: "No prob. TL;DR: Don't let 'thinking' become stalling. December is your launchpad. Join us to calibrate. Here's the link: [Link]",
+                        time: "11:50 AM"
+                    },
+                    {
+                        trigger: "Can't listen now",
+                        type: "system",
+                        content: "✓ Link sent despite voice rejection. User tagged: Text_Converted.",
+                        time: "11:50 AM"
+                    },
+                    {
+                        trigger: "Still not sure",
+                        type: "kira",
+                        content: "Got it. I won't push. If things clear up, the door is open. Good luck with the sprint.",
+                        time: "11:50 AM"
+                    },
+                    {
+                        trigger: "Still not sure",
+                        type: "system",
+                        content: "✓ User declined. Tagged: Followup_Jan_2026.",
+                        time: "11:50 AM"
+                    },
+                    // Branch 3: Uncertainty → Checklist
+                    {
+                        trigger: "Not sure / Maybe later",
+                        type: "kira",
+                        content: "Totally get it. Thinking is natural — but December is your launchpad. Want me to send a quick 3-point checklist to help decide?",
+                        time: "11:46 AM",
+                        options: [
+                            { text: "Yes, send checklist", type: "positive" },
+                            { text: "No thanks", type: "negative" }
+                        ]
+                    },
+                    {
+                        trigger: "Yes, send checklist",
+                        type: "system",
+                        content: "✓ Decision checklist sent. User tagged: Checklist_Engaged.",
+                        time: "11:48 AM"
+                    },
+                    {
+                        trigger: "No thanks",
+                        type: "kira",
+                        content: "Understood. The offer stays open if you change your mind. Take care!",
+                        time: "11:48 AM"
+                    },
+                    {
+                        trigger: "No thanks",
+                        type: "system",
+                        content: "✓ User declined. Tagged: Low_Interest.",
+                        time: "11:48 AM"
+                    }
+                ],
+                messages: [
+                    { type: "kira", content: "Hey Alex! The Final Sprint Momentum Clinic is happening this week. We've saved a spot for you — are you in a position to join us?", time: "11:40 AM" },
+                    { type: "user", content: "I'll think about it.", time: "11:45 AM" },
+                    { type: "system", content: "🎙️ Hesitation detected. Triggering Voice AI breakthrough protocol via ElevenLabs...", time: "11:46 AM" },
+                    { type: "kira", content: "Listen to this quickly 🎙️", time: "11:46 AM", hasVoice: true, voiceContent: { title: "Personal Message from Chris", duration: "45 seconds", transcript: "Alex... thinking often looks like stalling. And stalling in business doesn't mean you're being cautious — it means the market is moving while you're standing still. December isn't a month to 'think about it' — it's your launchpad. This clinic isn't about learning more theory. It's about calibrating your trajectory for 2026 before everyone else wakes up in January scrambling. You in?" }},
+                    { type: "user", content: "Okay, send the link.", time: "11:50 AM" },
+                    { type: "kira", content: "Perfect. Here's your direct access: [Link]. Let's get you clear!", time: "11:50 AM" },
+                    { type: "system", content: "✓ Voice breakthrough successful! User tagged: Voice_Converted. Registration confirmed.", time: "11:50 AM" }
+                ],
+                tags: [
+                    { name: "Voice_Engaged", type: "engage", icon: "🎤", tooltip: { title: "Voice Message Engaged", description: "User responded positively after AI voice message. Emotional breakthrough achieved - 63.2% conversion rate." }},
+                    { name: "Breakthrough_Achieved", type: "status", icon: "💎", tooltip: { title: "Emotional Breakthrough", description: "Voice AI successfully converted hesitant lead. 60%+ conversion rate to paid programs." }}
+                ],
+                logs: [
+                    { time: "11:45 AM", title: "Intent Analysis", detail: "Hesitation pattern detected - ANALYTICAL_STALLING" },
+                    { time: "11:46 AM", title: "Voice AI Triggered", detail: "ElevenLabs API called to generate personalized voice message" },
+                    { time: "11:50 AM", title: "Conversion Success", detail: "Voice breakthrough achieved - User converted" }
+                ],
+                currentStatus: { intent: "POSITIVE - Voice Converted", nextAction: "Day 14 Event Attendance", queue: "High-Value Sales Pipeline" }
+            },
+
+            // ========== Use Case I-5: Emma - Day 12 Downsell ==========
+            {
+                id: 5,
+                name: "Emma",
+                title: "Day 12 - The Downsell Pivot",
+                avatar: { bg: "#f59e0b", initials: "ED" },
+                statusBadge: "active",
+                day: 12,
+                preview: "Timing conflict solution...",
+                steps: [
+                    {
+                        type: "kira",
+                        content: "Hey Emma! Final call — the Momentum Clinic is this week. Are you ready to lock in your spot?",
+                        time: "10:15 AM",
+                        options: [
+                            { text: "Yes, I'm ready", type: "positive" },
+                            { text: "I have a board meeting at that time", type: "neutral" },
+                            { text: "Not interested", type: "negative" }
+                        ]
+                    },
+                    // Branch 1: Direct confirmation
+                    {
+                        trigger: "Yes, I'm ready",
+                        type: "kira",
+                        content: "Excellent! Your spot is confirmed. Link: [Link]. Can't wait to see you there!",
+                        time: "10:17 AM"
+                    },
+                    {
+                        trigger: "Yes, I'm ready",
+                        type: "system",
+                        content: "✓ Registration confirmed. User tagged: Webinar_Reg, Direct_Convert.",
+                        time: "10:17 AM"
+                    },
+                    // Branch 2: Timing conflict → Downsell pivot
+                    {
+                        trigger: "I have a board meeting at that time",
+                        type: "kira",
+                        content: "Ah, timing conflict. Since you can't make the live clinic, let's pivot. I've opened up a few slots for a 15-min Clarity Call with my team. No fluff, just strategy. Want the link?",
+                        time: "10:19 AM",
+                        options: [
+                            { text: "Yes, send the link", type: "positive" },
+                            { text: "Is this a sales call?", type: "negative" },
+                            { text: "Just send me the PDF", type: "neutral" }
+                        ]
+                    },
+                    {
+                        trigger: "Yes, send the link",
+                        type: "kira",
+                        content: "Done. Your 15-min Clarity Call slot is reserved. Link: [Link]. See you soon!",
+                        time: "10:22 AM"
+                    },
+                    {
+                        trigger: "Yes, send the link",
+                        type: "system",
+                        content: "✓ Downsell accepted. Booking link sent. Sales team notified - Hot Lead Alert triggered.",
+                        time: "10:22 AM"
+                    },
+                    {
+                        trigger: "Is this a sales call?",
+                        type: "kira",
+                        content: "It's a Strategy Diagnostic. We look at your Q1 goals and see if there are gaps. If we can help, we'll say so. If not, you get a plan anyway. Fair?",
+                        time: "10:22 AM",
+                        options: [
+                            { text: "Fair, send the link", type: "positive" },
+                            { text: "Still not sure", type: "negative" }
+                        ]
+                    },
+                    {
+                        trigger: "Fair, send the link",
+                        type: "kira",
+                        content: "Perfect. Here's your booking link: [Link]. Looking forward to helping you plan Q1!",
+                        time: "10:24 AM"
+                    },
+                    {
+                        trigger: "Fair, send the link",
+                        type: "system",
+                        content: "✓ Objection handled. Call booked. User tagged: HotLead_Clinic_Downsell.",
+                        time: "10:24 AM"
+                    },
+                    {
+                        trigger: "Still not sure",
+                        type: "kira",
+                        content: "No pressure. If it's not the right time, that's okay. Wishing you success with your board meeting!",
+                        time: "10:24 AM"
+                    },
+                    {
+                        trigger: "Still not sure",
+                        type: "system",
+                        content: "✓ User declined. Tagged: Followup_Q1_2026.",
+                        time: "10:24 AM"
+                    },
+                    {
+                        trigger: "Just send me the PDF",
+                        type: "kira",
+                        content: "I can send the PDF, but context is everything. How about I send it, and you promise to read page 3? Deal?",
+                        time: "10:22 AM",
+                        options: [
+                            { text: "Deal", type: "positive" },
+                            { text: "Just the PDF please", type: "neutral" }
+                        ]
+                    },
+                    {
+                        trigger: "Deal",
+                        type: "kira",
+                        content: "Great! PDF sent: [Link]. Page 3 is where the gold is. Let me know if you want to discuss after reading!",
+                        time: "10:24 AM"
+                    },
+                    {
+                        trigger: "Deal",
+                        type: "system",
+                        content: "✓ PDF sent. User tagged: Lead_Nurture, PDF_Engaged.",
+                        time: "10:24 AM"
+                    },
+                    {
+                        trigger: "Just the PDF please",
+                        type: "system",
+                        content: "✓ PDF sent. User tagged: Content_Only_Interest.",
+                        time: "10:24 AM"
+                    },
+                    // Branch 3: Direct rejection
+                    {
+                        trigger: "Not interested",
+                        type: "kira",
+                        content: "Got it. Thanks for letting me know. If things change, feel free to reach out. All the best!",
+                        time: "10:17 AM"
+                    },
+                    {
+                        trigger: "Not interested",
+                        type: "system",
+                        content: "✓ User declined. Tagged: Low_Interest, Followup_Q2_2026.",
+                        time: "10:17 AM"
+                    }
+                ],
+                messages: [
+                    { type: "kira", content: "Hey Emma! Final call — the Momentum Clinic is this week. Are you ready to lock in your spot?", time: "10:15 AM" },
+                    { type: "user", content: "I really want to, but I have a board meeting at that time.", time: "10:18 AM" },
+                    { type: "kira", content: "Ah, timing conflict. Since you can't make the live clinic, let's pivot. I've opened up a few slots for a 15-min Clarity Call with my team. No fluff, just strategy. Want the link?", time: "10:19 AM" },
+                    { type: "user", content: "Yes, send the link.", time: "10:22 AM" },
+                    { type: "kira", content: "Done. Your 15-min Clarity Call slot is reserved. Link: [Link]. See you soon!", time: "10:22 AM" },
+                    { type: "system", content: "✓ Downsell accepted. Booking link sent. Sales team notified - Hot Lead Alert.", time: "10:22 AM" }
+                ],
+                tags: [
+                    { name: "HotLead_Clinic_Downsell", type: "status", icon: "🔥", tooltip: { title: "Hot Lead - Downsell Pivot", description: "Strong intent but timing conflict. Pivoted to 15-min call. 65%+ close rate." }},
+                    { name: "Accepted_1on1", type: "engage", icon: "📞", tooltip: { title: "1-on-1 Consultation Accepted", description: "High commitment signal. Willing to invest personal time." }}
+                ],
+                logs: [
+                    { time: "10:18 AM", title: "Intent Analysis", detail: "Positive interest with timing barrier - DOWNSELL_PIVOT strategy" },
+                    { time: "10:22 AM", title: "Sales Alert", detail: "Slack notification sent to #sales-hot-leads. Context: Timing conflict, high intent." }
+                ],
+                currentStatus: { intent: "POSITIVE - High Intent", nextAction: "1-on-1 Consultation Booked", queue: "High-Priority Sales Pipeline" }
+            },
+
+            // ========== Use Case I-6: Michael - Day 14 Live Event ==========
+            {
+                id: 6,
+                name: "Michael",
+                title: "Day 14 - Live Event Coordination",
+                avatar: { bg: "#06b6d4", initials: "MC" },
+                statusBadge: "active",
+                day: 14,
+                preview: "Day-of confirmation...",
+                steps: [
+                    {
+                        type: "kira",
+                        content: "Hey Michael, Momentum Clinic starts in 2 hours. Still joining?",
+                        time: "4:05 PM",
+                        options: [
+                            { text: "Yes, I'm joining", type: "positive" },
+                            { text: "Running late but will join", type: "neutral" },
+                            { text: "Not sure yet", type: "neutral" }
+                        ]
+                    },
+                    // Branch 1: Confirmed
+                    {
+                        trigger: "Yes, I'm joining",
+                        type: "kira",
+                        content: "Great. Here is your unique Zoom link: [Link]. See you inside!",
+                        time: "4:08 PM"
+                    },
+                    {
+                        trigger: "Yes, I'm joining",
+                        type: "system",
+                        content: "✓ Attendee confirmed. Unique Zoom link generated. Event tracking activated.",
+                        time: "4:08 PM"
+                    },
+                    // Branch 2: Running late
+                    {
+                        trigger: "Running late but will join",
+                        type: "kira",
+                        content: "No stress. The session is recorded for 24h. Join when you can — we'll save your spot.",
+                        time: "4:08 PM"
+                    },
+                    {
+                        trigger: "Running late but will join",
+                        type: "system",
+                        content: "✓ User tagged: Late_Attendee. Session link sent. Recording access granted.",
+                        time: "4:08 PM"
+                    },
+                    // Branch 3: Uncertain
+                    {
+                        trigger: "Not sure yet",
+                        type: "kira",
+                        content: "Totally fine. The energy is high — you'll feel it even if you join 10 mins late. Want me to send a quick agenda?",
+                        time: "4:08 PM",
+                        options: [
+                            { text: "Yes, send agenda", type: "positive" },
+                            { text: "I'll decide soon", type: "neutral" }
+                        ]
+                    },
+                    {
+                        trigger: "Yes, send agenda",
+                        type: "kira",
+                        content: "Here's what we're covering: [Agenda Link]. Your Zoom link is also ready: [Link]",
+                        time: "4:10 PM"
+                    },
+                    {
+                        trigger: "Yes, send agenda",
+                        type: "system",
+                        content: "✓ Agenda sent. User tagged: Uncertain_Attendee.",
+                        time: "4:10 PM"
+                    },
+                    {
+                        trigger: "I'll decide soon",
+                        type: "kira",
+                        content: "Understood. The link is here when you're ready: [Link]. Hope to see you!",
+                        time: "4:10 PM"
+                    },
+                    {
+                        trigger: "I'll decide soon",
+                        type: "system",
+                        content: "✓ Link sent. User tagged: Maybe_Attendee.",
+                        time: "4:10 PM"
+                    }
+                ],
+                messages: [
+                    { type: "kira", content: "Hey Michael, Momentum Clinic starts in 2 hours. Still joining?", time: "4:05 PM" },
+                    { type: "user", content: "Yes, I'm joining.", time: "4:08 PM" },
+                    { type: "kira", content: "Great. Here is your unique Zoom link: [Link]. See you inside!", time: "4:08 PM" },
+                    { type: "system", content: "✓ Attendee confirmed. Unique Zoom link generated. Event tracking activated.", time: "4:08 PM" }
+                ],
+                tags: [
+                    { name: "Confirmed_Attendee", type: "engage", icon: "✅", tooltip: { title: "Confirmed Day-of Attendee", description: "User confirmed within 2 hours of event. 90%+ show-up probability." }},
+                    { name: "HighEnergy", type: "intent", icon: "⚡", tooltip: { title: "High Energy State", description: "User is excited. Perfect mental state for receiving offers." }}
+                ],
+                logs: [
+                    { time: "4:08 PM", title: "Intent Analysis", detail: "Strong confirmation - User ready to attend" },
+                    { time: "4:08 PM", title: "Zoom API Call", detail: "Generated unique meeting link. Registrant confirmed in dashboard." }
+                ],
+                currentStatus: { intent: "POSITIVE - High Energy", nextAction: "Event Attendance → Post-Event Offer", queue: "Live Event - Active Attendees" }
+            },
+
+            // ========== Use Case I-7: Jessica - Post-Event Recovery ==========
+            {
+                id: 7,
+                name: "Jessica",
+                title: "Post-Event Nurture (No-Show Recovery)",
+                avatar: { bg: "#ec4899", initials: "JL" },
+                statusBadge: "active",
+                day: "Post",
+                preview: "Surround sound recovery...",
+                steps: [
+                    {
+                        type: "system",
+                        content: "⚠️ Event ended 30 minutes ago. Jessica registered but did not attend. Initiating No-Show Recovery protocol.",
+                        time: "7:05 PM"
+                    },
+                    {
+                        type: "kira",
+                        content: "🎙️ Voice Message: Missed you today... the energy was exactly what we needed. Listen here:",
+                        time: "7:10 PM",
+                        hasVoice: true,
+                        voiceContent: {
+                            title: "Personal Follow-up from Chris",
+                            duration: "38 seconds",
+                            transcript: "Jessica, missed you today. The momentum in that room was exactly what I was hoping for — clarity, energy, and people making real decisions about 2026. I know life gets hectic. So I'm sending you the key insights from today as a PDF. But here's the thing: insights without implementation is just entertainment. If you're serious about your Q1 sprint, let's book a quick 15-minute call. No pitch. Just calibration. Link below."
+                        },
+                        options: [
+                            { text: "Download PDF Summary", type: "positive" },
+                            { text: "Book 15-min Clarity Call", type: "positive" },
+                            { text: "I'll check later", type: "negative" }
+                        ]
+                    },
+                    // Branch 1: PDF Download
+                    {
+                        trigger: "Download PDF Summary",
+                        type: "kira",
+                        content: "Here's the PDF: [Link]. It covers the '3 Hidden Traps' of December. Want to book a 15-min Clarity Call to discuss?",
+                        time: "7:45 PM",
+                        options: [
+                            { text: "Yes, book the call", type: "positive" },
+                            { text: "Just the PDF for now", type: "neutral" }
+                        ]
+                    },
+                    {
+                        trigger: "Yes, book the call",
+                        type: "kira",
+                        content: "Excellent! Pick a time that works for you: [Booking Link]. Looking forward to helping you win Q1!",
+                        time: "7:47 PM"
+                    },
+                    {
+                        trigger: "Yes, book the call",
+                        type: "system",
+                        content: "✓ Recovery successful! User entered high-ticket sales pipeline. Team alerted.",
+                        time: "7:47 PM"
+                    },
+                    {
+                        trigger: "Just the PDF for now",
+                        type: "kira",
+                        content: "Got it. The booking link will be in the PDF footer if you change your mind. Happy reading!",
+                        time: "7:47 PM"
+                    },
+                    {
+                        trigger: "Just the PDF for now",
+                        type: "system",
+                        content: "✓ PDF engaged. User tagged: Nurture_Content_Consumer.",
+                        time: "7:47 PM"
+                    },
+                    // Branch 2: Direct booking
+                    {
+                        trigger: "Book 15-min Clarity Call",
+                        type: "kira",
+                        content: "Perfect. Pick a time that works for you: [Booking Link]. Looking forward to helping you win Q1!",
+                        time: "7:45 PM"
+                    },
+                    {
+                        trigger: "Book 15-min Clarity Call",
+                        type: "system",
+                        content: "✓ Recovery successful! User entered high-ticket sales pipeline. Team alerted.",
+                        time: "7:46 PM"
+                    },
+                    // Branch 3: Delay
+                    {
+                        trigger: "I'll check later",
+                        type: "kira",
+                        content: "No rush. The PDF and booking link will stay here for 7 days. Just reply 'sprint' if you want a reminder.",
+                        time: "7:45 PM"
+                    },
+                    {
+                        trigger: "I'll check later",
+                        type: "system",
+                        content: "✓ User tagged: No_Show_Delayed. 7-day reminder set.",
+                        time: "7:45 PM"
+                    }
+                ],
+                messages: [
+                    { type: "system", content: "⚠️ Event ended 30 minutes ago. Jessica registered but did not attend. Initiating No-Show Recovery protocol.", time: "7:05 PM" },
+                    { type: "kira", content: "🎙️ Voice Message: Missed you today... the energy was exactly what we needed. Listen here:", time: "7:10 PM", hasVoice: true, voiceContent: { title: "Personal Follow-up from Chris", duration: "38 seconds", transcript: "Jessica, missed you today. The momentum in that room was exactly what I was hoping for — clarity, energy, and people making real decisions about 2026. I know life gets hectic. So I'm sending you the key insights from today as a PDF. But here's the thing: insights without implementation is just entertainment. If you're serious about your Q1 sprint, let's book a quick 15-minute call. No pitch. Just calibration. Link below." }},
+                    { type: "system", content: "📧 Simultaneous email sent: Subject: 'Missed you (and the momentum)' with PDF + booking link.", time: "7:10 PM" },
+                    { type: "user", content: "Sorry I couldn't make it. I'll book the call.", time: "7:45 PM" },
+                    { type: "kira", content: "Perfect. Pick a time that works for you: [Booking Link]. Looking forward to helping you win Q1!", time: "7:45 PM" },
+                    { type: "system", content: "✓ Recovery successful! User entered high-ticket sales pipeline. Team alerted.", time: "7:46 PM" }
+                ],
+                tags: [
+                    { name: "No_Show_Recovery", type: "status", icon: "🎯", tooltip: { title: "No-Show Successfully Recovered", description: "Extremely high-value conversion. 85.6% recovery rate via surround-sound strategy." }},
+                    { name: "Surround_Sound_Engaged", type: "engage", icon: "📡", tooltip: { title: "Multi-Channel Recovery", description: "Responded to voice + email + SMS recovery. High receptiveness." }},
+                    { name: "Converted_Call", type: "status", icon: "💎", tooltip: { title: "Consultation Booked", description: "Ultimate intent signal. 70%+ close rate." }}
+                ],
+                logs: [
+                    { time: "7:05 PM", title: "Event Status Check", detail: "Zoom API confirms no-show. Trigger: Absent 30 min post-event." },
+                    { time: "7:10 PM", title: "Recovery Protocol", detail: "Multi-channel: Voice (ElevenLabs) + Email (ActiveCampaign) + SMS (Twilio)." },
+                    { time: "7:46 PM", title: "Sales Alert", detail: "URGENT: User booked call. High-value pipeline entry." }
+                ],
+                currentStatus: { intent: "RECOVERED → POSITIVE", nextAction: "1-on-1 Consultation", queue: "Ultra-High-Value Sales Pipeline" }
+            }
+        ];
+        // AI response generator for free-form inputs
+        const generateAIResponse = (userInput) => {
+            const input = userInput.toLowerCase();
+            
+            if (input.includes('price') || input.includes('cost') || input.includes('how much')) {
+                return {
+                    content: "This session is fully complimentary (free) for my alumni network. Just need your time and focus. Interested?",
+                    options: [
+                        { text: "Yes, I'm interested", type: "positive" },
+                        { text: "Tell me more first", type: "neutral" }
+                    ]
+                };
+            }
+            
+            if (input.includes('record') || input.includes('replay') || input.includes('watch later')) {
+                return {
+                    content: "We prioritize live interaction for the best results. But register anyway — if we do release a recap, you'll be on the list. Shall I send the registration link?",
+                    options: [
+                        { text: "Yes, send the link", type: "positive" },
+                        { text: "No thanks", type: "negative" }
+                    ]
+                };
+            }
+            
+            if (input.includes('busy') || input.includes('not available') || input.includes('no time')) {
+                return {
+                    content: "No worries at all. Shall I text you the details so you can check it later when you have time?",
+                    options: [
+                        { text: "Yes please", type: "positive" },
+                        { text: "Not interested", type: "negative" }
+                    ]
+                };
+            }
+            
+            if (input.includes('help') || input.includes('what') || input.includes('?')) {
+                return {
+                    content: "I'm here to help you with the Final Sprint 2025 Momentum Clinic. What specific information would be most helpful for you?",
+                    options: [
+                        { text: "Tell me about pricing", type: "neutral" },
+                        { text: "Can I watch the recording?", type: "neutral" },
+                        { text: "How long is the session?", type: "neutral" }
+                    ]
+                };
+            }
+            
+            if (input.includes('yes') || input.includes('sure') || input.includes('okay') || input.includes('ok')) {
+                return {
+                    content: "Great! Let me get you set up. What would be most valuable for you right now?",
+                    options: [
+                        { text: "Join the webinar", type: "positive" },
+                        { text: "Schedule a 1-on-1 call", type: "positive" },
+                        { text: "Get the checklist", type: "neutral" }
+                    ]
+                };
+            }
+            
+            if (input.includes('no') || input.includes('not interested') || input.includes('stop')) {
+                return {
+                    content: "I understand. Thanks for your time. If anything changes, feel free to reach out.",
+                    options: null
+                };
+            }
+            
+            return {
+                content: "I want to make sure I understand you correctly. Could you tell me more about what you're looking for? Or feel free to select one of these common questions:",
+                options: [
+                    { text: "Tell me about pricing", type: "neutral" },
+                    { text: "Can I watch the recording?", type: "neutral" },
+                    { text: "I'm too busy right now", type: "neutral" },
+                    { text: "What's included in the program?", type: "neutral" }
+                ]
+            };
+        };
+
+        function App() {
+            const [currentView, setCurrentView] = useState('conversations'); // conversations, dashboard, preview
+            const [interactionMode, setInteractionMode] = useState('interactive'); // interactive, static
+            const [selectedScenario, setSelectedScenario] = useState(0);
+            const [currentStep, setCurrentStep] = useState(0);
+            const [conversationHistory, setConversationHistory] = useState([]);
+            const [isTyping, setIsTyping] = useState(false);
+            const [userInput, setUserInput] = useState('');
+            const [activePanel, setActivePanel] = useState('profile');
+            const [conversationLogs, setConversationLogs] = useState([]);
+            
+            // Live Preview states
+            const [previewMessages, setPreviewMessages] = useState([]);
+            const [kiraInput, setKiraInput] = useState('');
+            const [userReply, setUserReply] = useState('');
+            const [previewMode, setPreviewMode] = useState('kira'); // 'kira' or 'user'
+            
+            const messagesEndRef = useRef(null);
+
+            const scenario = allConversationData[selectedScenario];
+
+            useEffect(() => {
+                if (interactionMode === 'interactive' && scenario.steps && scenario.steps.length > 0) {
+                    setConversationHistory([{
+                        ...scenario.steps[0],
+                        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    }]);
+                    setCurrentStep(0);
+                    setConversationLogs([{
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        title: "Conversation Started",
+                        detail: `Initiated ${scenario.title} in interactive mode`
+                    }]);
+                } else if (interactionMode === 'static' && scenario.messages) {
+                    setConversationHistory([]);
+                    setConversationLogs(scenario.logs || []);
+                }
+            }, [selectedScenario, interactionMode]);
+
+            useEffect(() => {
+                if (messagesEndRef.current) {
+                    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+                }
+            }, [conversationHistory, isTyping]);
+
+            const handleOptionClick = (optionText) => {
+                const userMessage = {
+                    type: "user",
+                    content: optionText,
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                
+                setConversationHistory(prev => [...prev, userMessage]);
+                addLog("User Response", `User selected: "${optionText}"`);
+                setIsTyping(true);
+                
+                setTimeout(() => {
+                    setIsTyping(false);
+                    
+                    let nextSteps = [];
+                    let foundTrigger = false;
+                    
+                    for (let i = currentStep + 1; i < scenario.steps.length; i++) {
+                        const step = scenario.steps[i];
+                        if (step.trigger === optionText || !step.trigger) {
+                            nextSteps.push({
+                                ...step,
+                                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            });
+                            foundTrigger = true;
+                            if (!scenario.steps[i + 1] || scenario.steps[i + 1].trigger !== optionText) {
+                                setCurrentStep(i);
+                                break;
+                            }
+                        } else if (foundTrigger) {
+                            break;
+                        }
+                    }
+                    
+                    if (nextSteps.length > 0) {
+                        setConversationHistory(prev => [...prev, ...nextSteps]);
+                        addLog("AI Response", `Generated ${nextSteps.length} response(s) based on user intent`);
+                    } else {
+                        // Silently transition to free-form mode - no system message needed
+                        addLog("Conversation Flow", "Transitioned to free-form conversation mode");
+                    }
+                }, 1000);
+            };
+
+            const handleSendMessage = () => {
+                if (!userInput.trim()) return;
+                
+                const userMessage = {
+                    type: "user",
+                    content: userInput,
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                
+                setConversationHistory(prev => [...prev, userMessage]);
+                addLog("Free-form Input", `User typed: "${userInput}"`);
+                
+                const input = userInput;
+                setUserInput('');
+                setIsTyping(true);
+                
+                setTimeout(() => {
+                    setIsTyping(false);
+                    const aiResponse = generateAIResponse(input);
+                    
+                    const kiraMessage = {
+                        type: "kira",
+                        content: aiResponse.content,
+                        options: aiResponse.options,
+                        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+                    
+                    setConversationHistory(prev => [...prev, kiraMessage]);
+                    addLog("AI Generated Response", "Response generated using keyword detection and intent classification");
+                }, 1200);
+            };
+
+            const addLog = (title, detail) => {
+                setConversationLogs(prev => [...prev, {
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    title,
+                    detail
+                }]);
+            };
+
+            const handleReset = () => {
+                if (interactionMode === 'interactive' && scenario.steps && scenario.steps.length > 0) {
+                    setConversationHistory([{
+                        ...scenario.steps[0],
+                        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    }]);
+                    setCurrentStep(0);
+                    setConversationLogs([{
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        title: "Conversation Reset",
+                        detail: "Started fresh conversation flow"
+                    }]);
+                }
+            };
+
+            const renderVoiceMessage = (voiceContent) => (
+                <div className="voice-card">
+                    <div className="voice-header">
+                        <div className="voice-icon">🎙️</div>
+                        <div className="voice-info">
+                            <h4>{voiceContent.title}</h4>
+                            <p>{voiceContent.duration}</p>
+                        </div>
+                    </div>
+                    <div className="voice-text">
+                        "{voiceContent.transcript}"
+                    </div>
+                    <button className="play-btn">
+                        ▶️ Play Voice Message
+                    </button>
+                </div>
+            );
+
+            // Live Preview View
+            if (currentView === 'preview') {
+                const handleKiraSendMessage = () => {
+                    if (!kiraInput.trim()) return;
+                    
+                    const newMessage = {
+                        id: Date.now(),
+                        sender: 'kira',
+                        text: kiraInput,
+                        timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+                    };
+                    
+                    setPreviewMessages([...previewMessages, newMessage]);
+                    setKiraInput('');
+                };
+
+                const handleUserSendReply = () => {
+                    if (!userReply.trim()) return;
+                    
+                    const newMessage = {
+                        id: Date.now(),
+                        sender: 'user',
+                        text: userReply,
+                        timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+                    };
+                    
+                    setPreviewMessages([...previewMessages, newMessage]);
+                    setUserReply('');
+                };
+
+                return (
+                    <div className="app-container">
+                        <div className="sidebar">
+                            <div className="logo" onClick={() => setCurrentView('conversations')}>K</div>
+                            <div className={`nav-item ${currentView === 'conversations' ? 'active' : ''}`} onClick={() => setCurrentView('conversations')}>💬</div>
+                            <div className={`nav-item ${currentView === 'dashboard' ? 'active' : ''}`} onClick={() => setCurrentView('dashboard')}>📊</div>
+                            <div className={`nav-item ${currentView === 'preview' ? 'active' : ''}`} onClick={() => setCurrentView('preview')}>👁️</div>
+                            <div className="nav-item">⚙️</div>
+                        </div>
+                        
+                        <div style={{flex: 1, display: 'flex', background: 'var(--bg-secondary)', overflow: 'hidden'}}>
+                            {/* Kira's Admin Panel */}
+                            <div style={{flex: 1, display: 'flex', flexDirection: 'column', borderRight: '2px solid var(--border)', background: 'white'}}>
+                                <div style={{padding: '20px', borderBottom: '1px solid var(--border)', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
+                                    <h2 style={{fontSize: '20px', fontWeight: '700', color: 'white', marginBottom: '4px'}}>Kira Admin Panel</h2>
+                                    <p style={{fontSize: '13px', color: 'rgba(255,255,255,0.9)'}}>Send messages as Kira AI</p>
+                                </div>
+                                
+                                <div style={{flex: 1, padding: '20px', overflowY: 'auto', background: '#f8fafc'}}>
+                                    <div style={{marginBottom: '20px'}}>
+                                        <h3 style={{fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: 'var(--text-primary)'}}>📝 Conversation History</h3>
+                                        <div style={{background: 'white', borderRadius: '12px', padding: '16px', boxShadow: 'var(--shadow)'}}>
+                                            {previewMessages.length === 0 ? (
+                                                <div style={{textAlign: 'center', padding: '40px 20px', color: 'var(--text-secondary)'}}>
+                                                    <div style={{fontSize: '48px', marginBottom: '12px'}}>💬</div>
+                                                    <div style={{fontSize: '14px'}}>No messages yet. Start the conversation!</div>
+                                                </div>
+                                            ) : (
+                                                <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                                    {previewMessages.map((msg) => (
+                                                        <div key={msg.id} style={{
+                                                            display: 'flex',
+                                                            justifyContent: msg.sender === 'kira' ? 'flex-start' : 'flex-end'
+                                                        }}>
+                                                            <div style={{
+                                                                maxWidth: '70%',
+                                                                padding: '10px 14px',
+                                                                borderRadius: '12px',
+                                                                background: msg.sender === 'kira' ? '#dbeafe' : '#3b82f6',
+                                                                color: msg.sender === 'kira' ? 'var(--text-primary)' : 'white'
+                                                            }}>
+                                                                <div style={{fontSize: '13px', marginBottom: '4px', opacity: 0.7, fontWeight: '600'}}>
+                                                                    {msg.sender === 'kira' ? '🤖 Kira' : '👤 User'}
+                                                                </div>
+                                                                <div style={{fontSize: '14px', lineHeight: '1.5'}}>{msg.text}</div>
+                                                                <div style={{fontSize: '11px', marginTop: '4px', opacity: 0.6}}>{msg.timestamp}</div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    
+                                    <div style={{marginBottom: '20px'}}>
+                                        <h3 style={{fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: 'var(--text-primary)'}}>💡 Quick Templates</h3>
+                                        <div style={{display: 'grid', gap: '8px'}}>
+                                            {[
+                                                "Hey! Chris here from PPP Academy. Quick question - are you happy with your current business momentum?",
+                                                "I noticed you haven't responded yet. Just checking if you got my previous message?",
+                                                "Great! Let me send you the details for our Final Sprint Momentum Clinic...",
+                                                "No worries! Would a different time work better for you?"
+                                            ].map((template, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    onClick={() => setKiraInput(template)}
+                                                    style={{
+                                                        padding: '12px',
+                                                        background: 'white',
+                                                        border: '1px solid var(--border)',
+                                                        borderRadius: '8px',
+                                                        fontSize: '12px',
+                                                        textAlign: 'left',
+                                                        cursor: 'pointer',
+                                                        transition: 'all 0.2s',
+                                                        color: 'var(--text-secondary)'
+                                                    }}
+                                                    onMouseOver={(e) => {
+                                                        e.target.style.background = 'var(--bg-hover)';
+                                                        e.target.style.borderColor = 'var(--primary)';
+                                                    }}
+                                                    onMouseOut={(e) => {
+                                                        e.target.style.background = 'white';
+                                                        e.target.style.borderColor = 'var(--border)';
+                                                    }}
+                                                >
+                                                    {template}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style={{padding: '20px', borderTop: '1px solid var(--border)', background: 'white'}}>
+                                    <div style={{marginBottom: '12px'}}>
+                                        <label style={{fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', display: 'block', marginBottom: '8px'}}>
+                                            ✍️ Compose Message as Kira
+                                        </label>
+                                        <textarea
+                                            value={kiraInput}
+                                            onChange={(e) => setKiraInput(e.target.value)}
+                                            onKeyPress={(e) => {
+                                                if (e.key === 'Enter' && !e.shiftKey) {
+                                                    e.preventDefault();
+                                                    handleKiraSendMessage();
+                                                }
+                                            }}
+                                            placeholder="Type your message as Kira..."
+                                            style={{
+                                                width: '100%',
+                                                minHeight: '80px',
+                                                padding: '12px',
+                                                border: '2px solid var(--border)',
+                                                borderRadius: '8px',
+                                                fontSize: '14px',
+                                                fontFamily: 'inherit',
+                                                resize: 'vertical',
+                                                outline: 'none'
+                                            }}
+                                            onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+                                            onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={handleKiraSendMessage}
+                                        disabled={!kiraInput.trim()}
+                                        style={{
+                                            width: '100%',
+                                            padding: '12px',
+                                            background: kiraInput.trim() ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e2e8f0',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '8px',
+                                            fontSize: '14px',
+                                            fontWeight: '600',
+                                            cursor: kiraInput.trim() ? 'pointer' : 'not-allowed',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        📤 Send as Kira
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            {/* User's Phone View */}
+                            <div style={{flex: 1, display: 'flex', flexDirection: 'column', background: 'white'}}>
+                                <div style={{padding: '20px', borderBottom: '1px solid var(--border)', background: 'var(--primary)'}}>
+                                    <h2 style={{fontSize: '20px', fontWeight: '700', color: 'white', marginBottom: '4px'}}>User's Phone View</h2>
+                                    <p style={{fontSize: '13px', color: 'rgba(255,255,255,0.9)'}}>See messages from user perspective</p>
+                                </div>
+                                
+                                <div style={{flex: 1, padding: '20px', overflowY: 'auto', background: '#f8fafc'}}>
+                                    <div style={{maxWidth: '400px', margin: '0 auto'}}>
+                                        <div style={{background: 'white', borderRadius: '20px', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', overflow: 'hidden'}}>
+                                            {/* Phone Header */}
+                                            <div style={{padding: '16px', background: 'white', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '12px'}}>
+                                                <div style={{width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '700', fontSize: '16px'}}>K</div>
+                                                <div style={{flex: 1}}>
+                                                    <div style={{fontSize: '15px', fontWeight: '600', color: 'var(--text-primary)'}}>Kira</div>
+                                                    <div style={{fontSize: '12px', color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '4px'}}>
+                                                        <span style={{width: '8px', height: '8px', borderRadius: '50%', background: 'var(--success)'}}></span>
+                                                        Online
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Messages Area */}
+                                            <div style={{padding: '20px', minHeight: '400px', maxHeight: '500px', overflowY: 'auto', background: '#f8fafc'}}>
+                                                {previewMessages.length === 0 ? (
+                                                    <div style={{textAlign: 'center', padding: '60px 20px', color: 'var(--text-secondary)'}}>
+                                                        <div style={{fontSize: '48px', marginBottom: '12px'}}>📱</div>
+                                                        <div style={{fontSize: '14px'}}>Waiting for messages...</div>
+                                                    </div>
+                                                ) : (
+                                                    <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                                        {previewMessages.map((msg) => (
+                                                            <div key={msg.id} style={{
+                                                                display: 'flex',
+                                                                justifyContent: msg.sender === 'kira' ? 'flex-start' : 'flex-end'
+                                                            }}>
+                                                                <div style={{
+                                                                    maxWidth: '75%',
+                                                                    padding: '12px 16px',
+                                                                    borderRadius: msg.sender === 'kira' ? '18px 18px 18px 4px' : '18px 18px 4px 18px',
+                                                                    background: msg.sender === 'kira' ? 'white' : 'var(--primary)',
+                                                                    color: msg.sender === 'kira' ? 'var(--text-primary)' : 'white',
+                                                                    boxShadow: msg.sender === 'kira' ? 'var(--shadow)' : 'none'
+                                                                }}>
+                                                                    <div style={{fontSize: '14px', lineHeight: '1.5', marginBottom: '4px'}}>{msg.text}</div>
+                                                                    <div style={{fontSize: '11px', opacity: 0.6, textAlign: 'right'}}>{msg.timestamp}</div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            
+                                            {/* Reply Input */}
+                                            <div style={{padding: '16px', background: 'white', borderTop: '1px solid var(--border)'}}>
+                                                <div style={{display: 'flex', gap: '8px'}}>
+                                                    <input
+                                                        type="text"
+                                                        value={userReply}
+                                                        onChange={(e) => setUserReply(e.target.value)}
+                                                        onKeyPress={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                e.preventDefault();
+                                                                handleUserSendReply();
+                                                            }
+                                                        }}
+                                                        placeholder="Type user reply..."
+                                                        style={{
+                                                            flex: 1,
+                                                            padding: '10px 14px',
+                                                            border: '1px solid var(--border)',
+                                                            borderRadius: '20px',
+                                                            fontSize: '14px',
+                                                            outline: 'none'
+                                                        }}
+                                                        onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+                                                        onBlur={(e) => e.target.style.borderColor = 'var(--border)'}
+                                                    />
+                                                    <button
+                                                        onClick={handleUserSendReply}
+                                                        disabled={!userReply.trim()}
+                                                        style={{
+                                                            width: '44px',
+                                                            height: '44px',
+                                                            borderRadius: '50%',
+                                                            border: 'none',
+                                                            background: userReply.trim() ? 'var(--primary)' : 'var(--bg-secondary)',
+                                                            color: 'white',
+                                                            fontSize: '18px',
+                                                            cursor: userReply.trim() ? 'pointer' : 'not-allowed',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            transition: 'all 0.2s'
+                                                        }}
+                                                    >
+                                                        ➤
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div style={{marginTop: '20px', padding: '16px', background: 'white', borderRadius: '12px', boxShadow: 'var(--shadow)'}}>
+                                            <div style={{fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: 'var(--text-primary)'}}>💡 Quick User Replies</div>
+                                            <div style={{display: 'flex', flexWrap: 'wrap', gap: '8px'}}>
+                                                {[
+                                                    "Yes, interested!",
+                                                    "Tell me more",
+                                                    "Maybe later",
+                                                    "Not interested",
+                                                    "What's the price?",
+                                                    "Can I see a demo?"
+                                                ].map((reply, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => setUserReply(reply)}
+                                                        style={{
+                                                            padding: '8px 14px',
+                                                            background: 'var(--bg-secondary)',
+                                                            border: '1px solid var(--border)',
+                                                            borderRadius: '16px',
+                                                            fontSize: '12px',
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.2s',
+                                                            color: 'var(--text-secondary)'
+                                                        }}
+                                                        onMouseOver={(e) => {
+                                                            e.target.style.background = 'var(--primary)';
+                                                            e.target.style.color = 'white';
+                                                        }}
+                                                        onMouseOut={(e) => {
+                                                            e.target.style.background = 'var(--bg-secondary)';
+                                                            e.target.style.color = 'var(--text-secondary)';
+                                                        }}
+                                                    >
+                                                        {reply}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // Dashboard View
+            if (currentView === 'dashboard') {
+                return (
+                    <div className="app-container">
+                        <div className="sidebar">
+                            <div className="logo" onClick={() => setCurrentView('conversations')}>K</div>
+                            <div className={`nav-item ${currentView === 'conversations' ? 'active' : ''}`} onClick={() => setCurrentView('conversations')}>💬</div>
+                            <div className={`nav-item ${currentView === 'dashboard' ? 'active' : ''}`} onClick={() => setCurrentView('dashboard')}>📊</div>
+                            <div className={`nav-item ${currentView === 'preview' ? 'active' : ''}`} onClick={() => setCurrentView('preview')} title="Live Preview">👁️</div>
+                            <div className="nav-item">⚙️</div>
+                        </div>
+                        
+                        <div className="dashboard-container">
+                            <div className="dashboard-header">
+                                <div>
+                                    <h1 className="dashboard-title">Final Sprint Campaign Dashboard</h1>
+                                    <p className="dashboard-subtitle">Real-time analytics for PPP Academy Q4 2025 Campaign</p>
+                                </div>
+                                <div style={{fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                                    <span style={{width: '8px', height: '8px', background: '#10b981', borderRadius: '50%', display: 'inline-block'}}></span>
+                                    <span>Last updated: Nov 26, 2025 14:32 UTC</span>
+                                </div>
+                            </div>
+
+                            <div className="metrics-grid">
+                                <div className="metric-card primary">
+                                    <div className="metric-icon">🎯</div>
+                                    <div className="metric-content">
+                                        <div className="metric-value">23.8%</div>
+                                        <div className="metric-label">Conversion Rate</div>
+                                        <div className="metric-change positive">+3.8% vs target</div>
+                                        <div style={{fontSize: '10px', color: '#94a3b8', marginTop: '8px', lineHeight: '1.4'}}>
+                                            Target: 20-25% • Formula: Booked ÷ Attendees<br/>
+                                            Source: CRM + Zoom API • Update: Real-time
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="metric-card success">
+                                    <div className="metric-icon">👥</div>
+                                    <div className="metric-content">
+                                        <div className="metric-value">1,247</div>
+                                        <div className="metric-label">Total Engaged</div>
+                                        <div className="metric-change positive">+12% WoW</div>
+                                        <div style={{fontSize: '10px', color: '#94a3b8', marginTop: '8px', lineHeight: '1.4'}}>
+                                            Users who replied • Day 0 → Day 14<br/>
+                                            Source: Twilio + Make.com • Update: Per reply
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="metric-card warning">
+                                    <div className="metric-icon">⚡</div>
+                                    <div className="metric-content">
+                                        <div className="metric-value">28.4%</div>
+                                        <div className="metric-label">Engagement Rate</div>
+                                        <div className="metric-change positive">+3.4% vs target</div>
+                                        <div style={{fontSize: '10px', color: '#94a3b8', marginTop: '8px', lineHeight: '1.4'}}>
+                                            Target: &gt;25% • Formula: Engaged ÷ Initial<br/>
+                                            Source: ActiveCampaign • Update: Daily batch
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="metric-card info">
+                                    <div className="metric-icon">📉</div>
+                                    <div className="metric-content">
+                                        <div className="metric-value">8.2%</div>
+                                        <div className="metric-label">Opt-out Rate</div>
+                                        <div className="metric-change positive">-1.8% vs target</div>
+                                        <div style={{fontSize: '10px', color: '#94a3b8', marginTop: '8px', lineHeight: '1.4'}}>
+                                            Target: &lt;10% • Formula: Do_Not_Contact ÷ Total<br/>
+                                            Source: ActiveCampaign • Update: Real-time
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="charts-row">
+                                <div className="chart-card wide">
+                                    <h3 className="chart-title">Conversion Funnel - Complete User Journey</h3>
+                                    <div className="funnel-container">
+                                        <div className="funnel-stage" style={{width: '100%'}}>
+                                            <div className="funnel-bar" style={{background: '#3b82f6'}}>
+                                                <span className="funnel-label">Day 0: Initial Contact</span>
+                                                <span className="funnel-value">1,247 users (100%)</span>
+                                            </div>
+                                        </div>
+                                        <div className="funnel-stage" style={{width: '85%'}}>
+                                            <div className="funnel-bar" style={{background: '#8b5cf6'}}>
+                                                <span className="funnel-label">Day 3-7: Webinar Invite</span>
+                                                <span className="funnel-value">1,060 engaged (85%)</span>
+                                            </div>
+                                        </div>
+                                        <div className="funnel-stage" style={{width: '62%'}}>
+                                            <div className="funnel-bar" style={{background: '#10b981'}}>
+                                                <span className="funnel-label">Day 10: Registered</span>
+                                                <span className="funnel-value">773 registered (62%)</span>
+                                            </div>
+                                        </div>
+                                        <div className="funnel-stage" style={{width: '48%'}}>
+                                            <div className="funnel-bar" style={{background: '#f59e0b'}}>
+                                                <span className="funnel-label">Day 14: Attended</span>
+                                                <span className="funnel-value">599 attended (48%)</span>
+                                            </div>
+                                        </div>
+                                        <div className="funnel-stage" style={{width: '23.8%'}}>
+                                            <div className="funnel-bar" style={{background: '#ef4444'}}>
+                                                <span className="funnel-label">Converted to Call</span>
+                                                <span className="funnel-value">297 booked (23.8%)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="chart-card">
+                                    <h3 className="chart-title">Voice AI Impact</h3>
+                                    <div className="funnel-container" style={{marginTop: '20px'}}>
+                                        <div className="status-card">
+                                            <div className="status-row">
+                                                <span className="status-label">Standard SMS</span>
+                                                <span className="status-value">24.8%</span>
+                                            </div>
+                                            <div className="status-row">
+                                                <span className="status-label">Voice AI</span>
+                                                <span className="status-value" style={{color: 'var(--success)'}}>63.2%</span>
+                                            </div>
+                                            <div className="status-row">
+                                                <span className="status-label">Improvement</span>
+                                                <span className="status-value" style={{color: 'var(--warning)'}}>+38.4pp</span>
+                                            </div>
+                                        </div>
+                                        <div style={{marginTop: '16px', fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6'}}>
+                                            <strong>Why it works:</strong> ElevenLabs AI voice creates emotional authenticity that text cannot match, bypassing analytical "I'll think about it" stalling.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{background: 'white', borderRadius: '12px', padding: '24px', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)'}}>
+                                <h3 style={{fontSize: '16px', fontWeight: '600', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                                    <span>⚙️</span>
+                                    <span>Data Update & Automation Rules</span>
+                                </h3>
+                                <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px'}}>
+                                    <div style={{background: '#f8fafc', borderRadius: '8px', padding: '16px', borderLeft: '3px solid #3b82f6'}}>
+                                        <div style={{fontSize: '13px', fontWeight: '600', marginBottom: '8px'}}>KPI Cards</div>
+                                        <div style={{fontSize: '12px', color: '#64748b', lineHeight: '1.6'}}>
+                                            <div><strong>Trigger:</strong> New event (reply, tag, booking)</div>
+                                            <div><strong>Source:</strong> Make.com / Twilio / Zoom</div>
+                                            <div><strong>Frequency:</strong> Real-time (5 min delay)</div>
+                                        </div>
+                                    </div>
+                                    <div style={{background: '#f8fafc', borderRadius: '8px', padding: '16px', borderLeft: '3px solid #3b82f6'}}>
+                                        <div style={{fontSize: '13px', fontWeight: '600', marginBottom: '8px'}}>Funnel Stages</div>
+                                        <div style={{fontSize: '12px', color: '#64748b', lineHeight: '1.6'}}>
+                                            <div><strong>Trigger:</strong> New user enters stage</div>
+                                            <div><strong>Source:</strong> ActiveCampaign + Make.com</div>
+                                            <div><strong>Frequency:</strong> Batch hourly</div>
+                                        </div>
+                                    </div>
+                                    <div style={{background: '#f8fafc', borderRadius: '8px', padding: '16px', borderLeft: '3px solid #3b82f6'}}>
+                                        <div style={{fontSize: '13px', fontWeight: '600', marginBottom: '8px'}}>Voice AI Impact</div>
+                                        <div style={{fontSize: '12px', color: '#64748b', lineHeight: '1.6'}}>
+                                            <div><strong>Trigger:</strong> Day 10 user completes journey</div>
+                                            <div><strong>Source:</strong> OpenAI + ElevenLabs logs</div>
+                                            <div><strong>Frequency:</strong> Daily</div>
+                                        </div>
+                                    </div>
+                                    <div style={{background: '#f8fafc', borderRadius: '8px', padding: '16px', borderLeft: '3px solid #3b82f6'}}>
+                                        <div style={{fontSize: '13px', fontWeight: '600', marginBottom: '8px'}}>Performance Summary</div>
+                                        <div style={{fontSize: '12px', color: '#64748b', lineHeight: '1.6'}}>
+                                            <div><strong>Trigger:</strong> End of day</div>
+                                            <div><strong>Source:</strong> CRM + Finance DB</div>
+                                            <div><strong>Frequency:</strong> Daily at 00:00 UTC</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{background: 'white', borderRadius: '12px', padding: '24px', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)'}}>
+                                <h3 style={{fontSize: '16px', fontWeight: '600', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                                    <span>🚨</span>
+                                    <span>Alerting & Anomaly Detection</span>
+                                </h3>
+                                <div style={{fontSize: '13px', lineHeight: '1.8', color: '#64748b'}}>
+                                    <div style={{marginBottom: '12px', padding: '12px', background: '#f8fafc', borderRadius: '8px', borderLeft: '3px solid #ef4444'}}>
+                                        <strong style={{color: '#ef4444'}}>Critical:</strong> Conversion Rate &lt; 20%
+                                        <div style={{marginTop: '4px', fontSize: '12px'}}>→ Slack alert → Notify product lead + pause Day 0 sends</div>
+                                    </div>
+                                    <div style={{marginBottom: '12px', padding: '12px', background: '#f8fafc', borderRadius: '8px', borderLeft: '3px solid #f59e0b'}}>
+                                        <strong style={{color: '#f59e0b'}}>Warning:</strong> Engagement Rate &lt; 22%
+                                        <div style={{marginTop: '4px', fontSize: '12px'}}>→ Email alert → Review Day 0 hook script</div>
+                                    </div>
+                                    <div style={{marginBottom: '12px', padding: '12px', background: '#f8fafc', borderRadius: '8px', borderLeft: '3px solid #ef4444'}}>
+                                        <strong style={{color: '#ef4444'}}>Critical:</strong> Opt-out Rate &gt; 9%
+                                        <div style={{marginTop: '4px', fontSize: '12px'}}>→ Dashboard red border → Pause all outbound messages</div>
+                                    </div>
+                                    <div style={{marginBottom: '0', padding: '12px', background: '#f8fafc', borderRadius: '8px', borderLeft: '3px solid #3b82f6'}}>
+                                        <strong style={{color: '#3b82f6'}}>Info:</strong> Voice AI Improvement &lt; 30pp
+                                        <div style={{marginTop: '4px', fontSize: '12px'}}>→ Internal ticket → Audit audio quality & script</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{textAlign: 'center', padding: '40px', color: 'var(--text-secondary)'}}>
+                                <div style={{fontSize: '48px', marginBottom: '16px'}}>🎯</div>
+                                <div style={{fontSize: '18px', fontWeight: '600', marginBottom: '8px'}}>Campaign Performance Summary</div>
+                                <div style={{fontSize: '14px'}}>
+                                    <strong>$4.24M Pipeline Value</strong> from 1,247 initial contacts<br/>
+                                    Expected Conversions: 202 (68% close rate)<br/>
+                                    Projected Revenue: $2.88M
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // Conversations View
+            const messagesToShow = interactionMode === 'static' ? scenario.messages : conversationHistory;
+            const showInputBox = interactionMode === 'interactive';
+
+            return (
+                <div className="app-container">
+                    <div className="sidebar">
+                        <div className="logo" onClick={() => setCurrentView('conversations')}>K</div>
+                        <div className={`nav-item ${currentView === 'conversations' ? 'active' : ''}`} onClick={() => setCurrentView('conversations')}>
+                            💬
+                            <div className="nav-badge">7</div>
+                        </div>
+                        <div className={`nav-item ${currentView === 'dashboard' ? 'active' : ''}`} onClick={() => setCurrentView('dashboard')}>📊</div>
+                        <div className={`nav-item ${currentView === 'preview' ? 'active' : ''}`} onClick={() => setCurrentView('preview')} title="Live Preview">
+                            👁️
+                        </div>
+                        <div className="nav-item">⚙️</div>
+                    </div>
+
+                    <div className="conversations-panel">
+                        <div className="panel-header">
+                            <div className="panel-title">7 Complete Journeys</div>
+                            <div className="search-box">
+                                <span className="search-icon">🔍</span>
+                                <input type="text" className="search-input" placeholder="Search..." />
+                            </div>
+                            <div className="mode-toggle">
+                                <button 
+                                    className={`mode-btn ${interactionMode === 'interactive' ? 'active' : ''}`}
+                                    onClick={() => setInteractionMode('interactive')}
+                                >
+                                    🎮 Interactive
+                                </button>
+                                <button 
+                                    className={`mode-btn ${interactionMode === 'static' ? 'active' : ''}`}
+                                    onClick={() => setInteractionMode('static')}
+                                >
+                                    📄 Static View
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="conversations-list">
+                            <div className="section-header">Day 0 → Post-Event Campaign</div>
+                            
+                            {allConversationData.map((item, index) => (
+                                <div
+                                    key={item.id}
+                                    className={`conversation-item ${selectedScenario === index ? 'active' : ''}`}
+                                    onClick={() => setSelectedScenario(index)}
+                                >
+                                    <div className="conversation-avatar" style={{ background: item.avatar.bg }}>
+                                        {item.avatar.initials}
+                                    </div>
+                                    <div className="conversation-content">
+                                        <div className="conversation-header">
+                                            <div className="conversation-name">{item.name}</div>
+                                        </div>
+                                        <div className="conversation-preview">{item.preview}</div>
+                                        <div className="conversation-meta">
+                                            <div className="conversation-day">Day {item.day}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="chat-area">
+                        <div className="chat-header">
+                            <div className="chat-header-left">
+                                <div className="chat-avatar" style={{ background: scenario.avatar.bg }}>
+                                    {scenario.avatar.initials}
+                                </div>
+                                <div className="chat-info">
+                                    <h3>{scenario.name}</h3>
+                                    <p>Active conversation</p>
+                                </div>
+                            </div>
+                            <div className="chat-actions">
+                                {interactionMode === 'interactive' && <button className="action-btn" onClick={handleReset}>🔄 Reset</button>}
+                            </div>
+                        </div>
+
+                        <div className="chat-messages">
+                            {messagesToShow && messagesToShow.map((message, index) => (
+                                <div key={index} className={`message-group ${message.type}`}>
+                                    <div className={`message-avatar avatar-${message.type}`}>
+                                        {message.type === 'kira' ? 'K' : message.type === 'system' ? '⚙️' : scenario.avatar.initials}
+                                    </div>
+                                    <div className="message-content">
+                                        <div className="message-bubble">
+                                            {message.content}
+                                            {message.hasVoice && renderVoiceMessage(message.voiceContent)}
+                                        </div>
+                                        <div className="message-time">
+                                            {message.timestamp || message.time}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+
+                            {isTyping && (
+                                <div className="message-group kira">
+                                    <div className="message-avatar avatar-kira">K</div>
+                                    <div className="message-content">
+                                        <div className="typing-indicator">
+                                            <div className="typing-dot"></div>
+                                            <div className="typing-dot"></div>
+                                            <div className="typing-dot"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {interactionMode === 'interactive' && 
+                             messagesToShow.length > 0 && 
+                             !isTyping && 
+                             messagesToShow[messagesToShow.length - 1].options && (
+                                <div className="response-options">
+                                    <div className="option-btns">
+                                        {messagesToShow[messagesToShow.length - 1].options.map((option, idx) => (
+                                            <button
+                                                key={idx}
+                                                className={`option-btn option-btn-${option.type}`}
+                                                onClick={() => handleOptionClick(option.text)}
+                                            >
+                                                {option.text}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            <div ref={messagesEndRef} />
+                        </div>
+
+                        {showInputBox && (
+                            <div className="chat-input-container">
+                                <div className="chat-input-wrapper">
+                                    <textarea
+                                        className="chat-input"
+                                        placeholder="Type your response..."
+                                        value={userInput}
+                                        onChange={(e) => setUserInput(e.target.value)}
+                                        onKeyPress={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                                e.preventDefault();
+                                                handleSendMessage();
+                                            }
+                                        }}
+                                    />
+                                    <button 
+                                        className="send-btn" 
+                                        onClick={handleSendMessage}
+                                        disabled={!userInput.trim()}
+                                    >
+                                        ➤
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="right-panel">
+                        <div className="panel-tabs">
+                            <div 
+                                className={`panel-tab ${activePanel === 'profile' ? 'active' : ''}`}
+                                onClick={() => setActivePanel('profile')}
+                            >
+                                Tags & Status
+                            </div>
+                            <div 
+                                className={`panel-tab ${activePanel === 'logs' ? 'active' : ''}`}
+                                onClick={() => setActivePanel('logs')}
+                            >
+                                {interactionMode === 'interactive' ? 'Activity Logs' : 'Backend Logs'}
+                            </div>
+                        </div>
+
+                        <div className="panel-content">
+                            {activePanel === 'profile' ? (
+                                <>
+                                    {interactionMode === 'interactive' && (
+                                        <div className="section">
+                                            <div className="section-title">Conversation Progress</div>
+                                            <div className="status-card">
+                                                <div className="status-row">
+                                                    <span className="status-label">Messages Exchanged</span>
+                                                    <span className="status-value">{messagesToShow.length}</span>
+                                                </div>
+                                                <div className="status-row">
+                                                    <span className="status-label">Current Mode</span>
+                                                    <span className="status-value">
+                                                        {currentStep < (scenario.steps?.length || 0) - 1 ? 'Guided' : 'Free-form'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {interactionMode === 'static' && scenario.currentStatus && (
+                                        <div className="section">
+                                            <div className="section-title">Current Status</div>
+                                            <div className="status-card">
+                                                <div className="status-row">
+                                                    <span className="status-label">User Intent</span>
+                                                    <span className="status-value">{scenario.currentStatus.intent}</span>
+                                                </div>
+                                                <div className="status-row">
+                                                    <span className="status-label">Next Action</span>
+                                                    <span className="status-value">{scenario.currentStatus.nextAction}</span>
+                                                </div>
+                                                <div className="status-row">
+                                                    <span className="status-label">Queue Status</span>
+                                                    <span className="status-value">{scenario.currentStatus.queue}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {scenario.tags && scenario.tags.length > 0 && (
+                                        <div className="section">
+                                            <div className="section-title">Active Tags ({scenario.tags.length})</div>
+                                            <div className="tag-list">
+                                                {scenario.tags.map((tag, index) => (
+                                                    <div key={index} className="tag-item">
+                                                        <div className="tag-left">
+                                                            <div className={`tag-icon ${tag.type}`}>{tag.icon}</div>
+                                                            <div className="tag-name">{tag.name}</div>
+                                                        </div>
+                                                        <div className="tag-help">
+                                                            ?
+                                                            <div className="tag-tooltip">
+                                                                <div className="tooltip-title">{tag.tooltip.title}</div>
+                                                                <div>{tag.tooltip.description}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <div className="section">
+                                    <div className="section-title">{interactionMode === 'interactive' ? 'Real-time Activity' : 'Processing Logs'}</div>
+                                    <div className="log-list">
+                                        {conversationLogs.map((log, index) => (
+                                            <div key={index} className="log-item">
+                                                <div className="log-time">{log.time}</div>
+                                                <div className="log-title">{log.title}</div>
+                                                <div className="log-detail">{log.detail}</div>
+                                                {log.code && (
+                                                    <div className="code-block">{log.code}</div>
+                                                )}
+                                            </div>
+                                        ))}
+                                        {conversationLogs.length === 0 && (
+                                            <div style={{fontSize: '13px', color: 'var(--text-secondary)', textAlign: 'center', padding: '20px'}}>
+                                                {interactionMode === 'interactive' ? 'Activity logs will appear as you interact' : 'No logs available for this case'}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

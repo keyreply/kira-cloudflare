@@ -1,0 +1,13 @@
+name = "ppp-academy"
+compatibility_date = "2025-11-27"
+pages_build_output_dir = "dist"
+
+[build]
+command = "npm run build"
+
+[build.upload]
+format = "service-worker"
+
+# Environment variables can be set here or in the Cloudflare dashboard
+# [vars]
+# API_KEY = "your-api-key"
