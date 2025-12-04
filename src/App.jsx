@@ -5,6 +5,10 @@ import { ChatArea } from './components/ChatArea';
 import { RightPanel } from './components/RightPanel';
 import { Dashboard } from './components/Dashboard';
 import { Preview } from './components/Preview';
+import GlobalAIAgent from './components/GlobalAIAgent/GlobalAIAgent';
+import ManageBrands from './components/ManageBrands/ManageBrands';
+import EditBrand from './components/ManageBrands/EditBrand';
+import Channels from './components/Channels/Channels';
 import { allConversationData } from './data/conversations';
 import { generateAIResponse } from './utils/ai';
 
@@ -15,7 +19,39 @@ function App() {
   const [currentStep, setCurrentStep] = useState(0);
   const [conversationHistory, setConversationHistory] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
+
   const [userInput, setUserInput] = useState('');
+  const [editingBrand, setEditingBrand] = useState(null);
+  const [brands, setBrands] = useState([
+    {
+      id: 'lr0gyz71',
+      name: 'key',
+      agent: 'Kira',
+      defaultAddress: 'support@key.com',
+      status: 'Default brand',
+      iconColor: 'text-white bg-blue-600'
+    }
+  ]);
+
+  const handleSaveBrand = (updatedBrand) => {
+    if (brands.find(b => b.id === updatedBrand.id)) {
+      setBrands(brands.map(b => b.id === updatedBrand.id ? updatedBrand : b));
+    } else {
+      setBrands([...brands, { ...updatedBrand, iconColor: 'text-white bg-blue-600' }]);
+    }
+    setEditingBrand(null);
+  };
+
+  const handleNewBrand = () => {
+    setEditingBrand({
+      id: Math.random().toString(36).substr(2, 9),
+      name: '',
+      agent: 'Kira',
+      defaultAddress: '',
+      status: 'Active',
+      isNew: true
+    });
+  };
   const [activePanel, setActivePanel] = useState('profile');
   const [conversationLogs, setConversationLogs] = useState([]);
 
@@ -35,7 +71,7 @@ function App() {
       setConversationHistory([scenario.steps[0]]);
       setCurrentStep(0);
       setConversationLogs([]);
-      addLog("Conversation Started", `Initialized ${scenario.name}'s journey - ${scenario.title}`);
+      addLog("Conversation Started", `Initialized ${scenario.name} 's journey - ${scenario.title}`);
     } else {
       setConversationHistory([]);
       setConversationLogs(scenario.logs || []);
@@ -208,7 +244,31 @@ function App() {
           handleKiraSend={handleKiraSend}
           handleUserSend={handleUserSend}
         />
+
       )}
+
+      {currentView === 'brands' && !editingBrand && (
+        <ManageBrands
+          brands={brands}
+          onEditBrand={setEditingBrand}
+          onNewBrand={handleNewBrand}
+        />
+      )}
+
+      {currentView === 'brands' && editingBrand && (
+        <EditBrand
+          brand={editingBrand}
+          onCancel={() => setEditingBrand(null)}
+          onSave={handleSaveBrand}
+        />
+      )}
+
+      {currentView === 'channels' && (
+        <Channels />
+      )}
+
+      {/* Global AI Agent */}
+      <GlobalAIAgent />
     </div>
   );
 }

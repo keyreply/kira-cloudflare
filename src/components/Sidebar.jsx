@@ -3,7 +3,8 @@ import {
     ChatBubbleLeftRightIcon,
     ChartBarIcon,
     EyeIcon,
-    Cog6ToothIcon
+    Cog6ToothIcon,
+    SignalIcon
 } from '@heroicons/react/24/outline';
 
 export function Sidebar({ currentView, setCurrentView }) {
@@ -34,6 +35,14 @@ export function Sidebar({ currentView, setCurrentView }) {
             </div>
 
             <div
+                className={`w-11 h-11 rounded-xl flex items-center justify-center text-slate-500 cursor-pointer mb-2 transition-all duration-200 relative hover:bg-slate-100 hover:text-blue-500 ${currentView === 'brands' ? 'bg-blue-100 text-blue-500' : ''}`}
+                onClick={() => setCurrentView('brands')}
+                title="Manage Brands"
+            >
+                <div className="w-6 h-6 border-2 border-current rounded-lg flex items-center justify-center text-[10px] font-bold">B</div>
+            </div>
+
+            <div
                 className={`w-11 h-11 rounded-xl flex items-center justify-center text-slate-500 cursor-pointer mb-2 transition-all duration-200 relative hover:bg-slate-100 hover:text-blue-500 ${currentView === 'preview' ? 'bg-blue-100 text-blue-500' : ''}`}
                 onClick={() => setCurrentView('preview')}
                 title="Live Preview"
@@ -41,8 +50,28 @@ export function Sidebar({ currentView, setCurrentView }) {
                 <EyeIcon className="w-6 h-6" />
             </div>
 
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center text-slate-500 cursor-pointer mb-2 transition-all duration-200 relative hover:bg-slate-100 hover:text-blue-500">
-                <Cog6ToothIcon className="w-6 h-6" />
+            <div
+                className={`w-11 h-11 rounded-xl flex items-center justify-center text-slate-500 cursor-pointer mb-2 transition-all duration-200 relative hover:bg-slate-100 hover:text-blue-500 ${currentView === 'channels' ? 'bg-blue-100 text-blue-500' : ''}`}
+                onClick={() => setCurrentView('channels')}
+                title="Channels"
+            >
+                <SignalIcon className="w-6 h-6" />
+            </div>
+
+            <div className="mt-auto mb-4 flex flex-col items-center gap-4">
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center text-slate-500 cursor-pointer hover:bg-slate-100 hover:text-blue-500">
+                    <Cog6ToothIcon className="w-6 h-6" />
+                </div>
+
+                <div className="px-2 w-full">
+                    <div className="bg-blue-50 rounded-lg p-2 text-center">
+                        <p className="text-[8px] font-bold text-gray-900 mb-1">Upgrade to Pro</p>
+                        <p className="text-[8px] text-gray-500 mb-2 leading-tight">Unlock advanced AI features</p>
+                        <button className="w-full bg-blue-600 text-white text-[8px] font-bold py-1 rounded hover:bg-blue-700 transition-colors">
+                            Upgrade Now
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
