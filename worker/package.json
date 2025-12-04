@@ -1,0 +1,15 @@
+{
+  "name": "ppp-academy-api",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
+  },
+  "devDependencies": {
+    "wrangler": "^4.50.0"
+  }
+}

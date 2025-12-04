@@ -1,0 +1,6 @@
+name = "ppp-academy-api"
+main = "index.js"
+compatibility_date = "2025-11-27"
+
+# The GEMINI_API_KEY will be added as a secret via:
+# wrangler secret put GEMINI_API_KEY
