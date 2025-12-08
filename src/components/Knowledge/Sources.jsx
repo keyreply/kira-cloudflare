@@ -1,11 +1,31 @@
-import React, { useState } from 'react';
-import { PlusIcon, CheckCircleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import React, { useState, useRef, useEffect } from 'react';
+import { PlusIcon, CheckCircleIcon, ArrowPathIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { knowledgeData, copilotIntegrations } from '../../data/knowledgeData';
 import IntegrationModal from './IntegrationModal';
+import NewContentModal from './NewContentModal';
 
-export default function Sources({ activeView, setActiveView }) {
+export default function Sources({ activeView, setActiveView, onArticleCreate }) {
     const [showModal, setShowModal] = useState(false);
     const [selectedIntegration, setSelectedIntegration] = useState(null);
+    const [showNewContentModal, setShowNewContentModal] = useState(false);
+    const [showLearnDropdown, setShowLearnDropdown] = useState(false);
+    const [showTestDropdown, setShowTestDropdown] = useState(false);
+    const learnRef = useRef(null);
+    const testRef = useRef(null);
+
+    // Close dropdowns when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (learnRef.current && !learnRef.current.contains(event.target)) {
+                setShowLearnDropdown(false);
+            }
+            if (testRef.current && !testRef.current.contains(event.target)) {
+                setShowTestDropdown(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const handleSyncImport = (integration) => {
         setSelectedIntegration(integration);
@@ -156,13 +176,46 @@ export default function Sources({ activeView, setActiveView }) {
                         Sources
                     </h1>
                     <div className="flex items-center gap-3">
-                        <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
-                            Learn ▾
-                        </button>
-                        <button className="text-sm text-slate-600 hover:text-slate-700 font-medium">
-                            Test Kira ▾
-                        </button>
-                        <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                        {/* Learn Dropdown */}
+                        <div className="relative" ref={learnRef}>
+                            <button
+                                onClick={() => setShowLearnDropdown(!showLearnDropdown)}
+                                className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                            >
+                                Learn
+                                <ChevronDownIcon className="w-4 h-4" />
+                            </button>
+                            {showLearnDropdown && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-10">
+                                    <a href="#" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Documentation</a>
+                                    <a href="#" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Video tutorials</a>
+                                    <a href="#" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Best practices</a>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Test Kira Dropdown */}
+                        <div className="relative" ref={testRef}>
+                            <button
+                                onClick={() => setShowTestDropdown(!showTestDropdown)}
+                                className="text-sm text-slate-600 hover:text-slate-700 font-medium flex items-center gap-1"
+                            >
+                                Test Kira
+                                <ChevronDownIcon className="w-4 h-4" />
+                            </button>
+                            {showTestDropdown && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-10">
+                                    <a href="#" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Test in sandbox</a>
+                                    <a href="#" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Run test queries</a>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* New Content Button */}
+                        <button
+                            onClick={() => setShowNewContentModal(true)}
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                        >
                             <PlusIcon className="w-4 h-4" />
                             New content
                         </button>
@@ -229,6 +282,18 @@ export default function Sources({ activeView, setActiveView }) {
                     onClose={() => {
                         setShowModal(false);
                         setSelectedIntegration(null);
+                    }}
+                />
+            )}
+
+            {/* New Content Modal */}
+            {showNewContentModal && (
+                <NewContentModal
+                    onClose={() => setShowNewContentModal(false)}
+                    onCreateArticle={(article) => {
+                        if (onArticleCreate) {
+                            onArticleCreate(article);
+                        }
                     }}
                 />
             )}

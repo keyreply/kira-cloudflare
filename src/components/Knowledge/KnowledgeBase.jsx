@@ -17,6 +17,12 @@ export default function KnowledgeBase() {
     const [selectedArticle, setSelectedArticle] = useState(null);
     const [isContentExpanded, setIsContentExpanded] = useState(true);
 
+    const handleCreateArticle = (newArticle) => {
+        // Open the article editor with the new article
+        setSelectedArticle(newArticle);
+        setActiveTab('content');
+    };
+
     const renderMainContent = () => {
         if (selectedArticle) {
             return <ArticleEditor article={selectedArticle} onClose={() => setSelectedArticle(null)} />;
@@ -24,11 +30,11 @@ export default function KnowledgeBase() {
 
         switch (activeTab) {
             case 'sources':
-                return <Sources activeView={activeView} setActiveView={setActiveView} />;
+                return <Sources activeView={activeView} setActiveView={setActiveView} onArticleCreate={handleCreateArticle} />;
             case 'content':
                 return <Content onArticleSelect={setSelectedArticle} />;
             default:
-                return <Sources activeView={activeView} setActiveView={setActiveView} />;
+                return <Sources activeView={activeView} setActiveView={setActiveView} onArticleCreate={handleCreateArticle} />;
         }
     };
 
