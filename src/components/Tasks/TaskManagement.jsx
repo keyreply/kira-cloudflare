@@ -4,12 +4,14 @@ import {
     PlusIcon,
     EllipsisVerticalIcon
 } from '@heroicons/react/24/outline';
-import { tasksData, statusOptions } from '../../data/tasksData';
+import { tasksData, statusOptions, templatesData } from '../../data/tasksData';
+import CreateTask from './CreateTask';
 
 export default function TaskManagement() {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [tasks, setTasks] = useState(tasksData);
+    const [showCreateTask, setShowCreateTask] = useState(false);
 
     const getStatusBadge = (status) => {
         const styles = {
@@ -26,6 +28,23 @@ export default function TaskManagement() {
         setTasks(tasks.map(task =>
             task.id === taskId ? { ...task, isOpen: !task.isOpen } : task
         ));
+    };
+
+    const handleSaveTask = (taskData) => {
+        // Add new task to the list
+        const newTask = {
+            id: tasks.length + 1,
+            taskName: taskData.taskName,
+            targetCount: 0, // Will be calculated after user selection
+            template: templatesData.find(t => t.id === parseInt(taskData.voiceTemplate))?.name || 'Unknown',
+            startType: taskData.startMethod === 'immediate' ? 'Immediate' : 'Scheduled',
+            creator: 'Current User', // Would come from auth in real app
+            createdAt: new Date().toISOString().split('T')[0],
+            status: 'Draft',
+            isOpen: true,
+            startTime: taskData.startTime
+        };
+        setTasks([newTask, ...tasks]);
     };
 
     const filteredTasks = tasks.filter(task => {
@@ -45,7 +64,10 @@ export default function TaskManagement() {
                         <h1 className="text-2xl font-bold text-slate-900">Task Management</h1>
                         <p className="text-sm text-slate-600 mt-1">Manage and monitor all outbound call tasks</p>
                     </div>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors text-sm font-medium">
+                    <button
+                        onClick={() => setShowCreateTask(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors text-sm font-medium"
+                    >
                         Create Task
                     </button>
                 </div>
@@ -174,6 +196,15 @@ export default function TaskManagement() {
                     </div>
                 )}
             </div>
+
+            {showCreateTask && (
+                <div className="fixed inset-0 z-50 bg-white">
+                    <CreateTask
+                        onClose={() => setShowCreateTask(false)}
+                        onSave={handleSaveTask}
+                    />
+                </div>
+            )}
         </div>
     );
 }
