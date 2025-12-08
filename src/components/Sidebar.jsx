@@ -8,13 +8,15 @@ import {
     UsersIcon,
     Cog6ToothIcon,
     UserCircleIcon,
-    StarIcon
+    StarIcon,
+    PhoneIcon
 } from '@heroicons/react/24/outline';
 
 export function Sidebar({ currentView, setCurrentView }) {
     const navItems = [
         { id: 'dashboard', icon: HomeIcon, label: 'Dashboard' },
         { id: 'conversations', icon: ChatBubbleLeftRightIcon, label: 'Inbox', badge: 4 },
+        { id: 'tasks', icon: PhoneIcon, label: 'Task Management' },
         { id: 'knowledge', icon: BookOpenIcon, label: 'Knowledge' },
         { id: 'channels', icon: SignalIcon, label: 'Channels' },
         { id: 'widget', icon: ChatBubbleOvalLeftEllipsisIcon, label: 'Widget' },
@@ -39,8 +41,8 @@ export function Sidebar({ currentView, setCurrentView }) {
                     <div
                         key={item.id}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 group ${currentView === item.id
-                                ? 'bg-blue-50 text-blue-600'
-                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                            ? 'bg-blue-50 text-blue-600'
+                            : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                             }`}
                         onClick={() => setCurrentView(item.id)}
                     >

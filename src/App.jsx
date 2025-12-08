@@ -11,6 +11,7 @@ import EditBrand from './components/ManageBrands/EditBrand';
 import Channels from './components/Channels/Channels';
 import Contacts from './components/Contacts/Contacts';
 import KnowledgeBase from './components/Knowledge/KnowledgeBase';
+import TaskManagement from './components/Tasks/TaskManagement';
 import { allConversationData } from './data/conversations';
 import { generateAIResponse } from './utils/ai';
 
@@ -284,6 +285,10 @@ function App() {
 
       {currentView === 'knowledge' && (
         <KnowledgeBase />
+      )}
+
+      {currentView === 'tasks' && (
+        <TaskManagement />
       )}
 
       {currentView === 'widget' && (
