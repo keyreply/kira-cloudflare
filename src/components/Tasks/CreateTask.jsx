@@ -28,6 +28,7 @@ export default function CreateTask({ onClose, onSave }) {
         startMethod: 'scheduled',
         startTime: '',
 
+
         // Step 3: Compliance
         antiHarassment: true,
         crossChannelLimit: '',
@@ -35,14 +36,14 @@ export default function CreateTask({ onClose, onSave }) {
         retryCount: '3',
         retryInterval: '',
         retryIntervalUnit: 'Hours',
-        forceExitScript: true,
+        mandatoryExitScript: true,
         sensitiveWordFilter: true,
         multiLanguageCompliance: true,
-        auditorName: '',
-        auditorEmail: '',
         maxConsecutiveFailures: '',
         fallbackChannel: '',
-        remarks: ''
+        reviewerName: '',
+        reviewerAssignment: '',
+        notes: ''
     });
 
     const updateFormData = (field, value) => {
@@ -469,6 +470,142 @@ export default function CreateTask({ onClose, onSave }) {
                 <p className="text-xs text-slate-500 mt-1">
                     After phone failure, downgrade to SMS or email
                 </p>
+            </div>
+
+            {/* Compliance Checks */}
+            <div className="border-t border-slate-200 pt-6 space-y-4">
+                <h3 className="text-base font-semibold text-slate-900 mb-4">Compliance Checks</h3>
+
+                {/* Mandatory Exit Script */}
+                <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                        <label className="text-sm font-medium text-slate-900">
+                            Mandatory Exit Script <span className="text-red-500">*</span>
+                        </label>
+                        <p className="text-xs text-slate-500 mt-1">
+                            All templates must include 'Reply STOP to unsubscribe'
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => updateFormData('mandatoryExitScript', !formData.mandatoryExitScript)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${formData.mandatoryExitScript ? 'bg-slate-900' : 'bg-slate-300'
+                            }`}
+                    >
+                        <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${formData.mandatoryExitScript ? 'translate-x-6' : 'translate-x-1'
+                                }`}
+                        />
+                    </button>
+                </div>
+
+                {/* Sensitive Word Filter */}
+                <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                        <label className="text-sm font-medium text-slate-900">
+                            Sensitive Word Filter <span className="text-red-500">*</span>
+                        </label>
+                        <p className="text-xs text-slate-500 mt-1">
+                            Auto-block tasks containing prohibited words like "100% cure"
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => updateFormData('sensitiveWordFilter', !formData.sensitiveWordFilter)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${formData.sensitiveWordFilter ? 'bg-slate-900' : 'bg-slate-300'
+                            }`}
+                    >
+                        <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${formData.sensitiveWordFilter ? 'translate-x-6' : 'translate-x-1'
+                                }`}
+                        />
+                    </button>
+                </div>
+
+                {/* Multi-language Compliance Check */}
+                <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                        <label className="text-sm font-medium text-slate-900">
+                            Multi-language Compliance Check <span className="text-red-500">*</span>
+                        </label>
+                        <p className="text-xs text-slate-500 mt-1">
+                            Ensure Chinese users receive Chinese scripts
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => updateFormData('multiLanguageCompliance', !formData.multiLanguageCompliance)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${formData.multiLanguageCompliance ? 'bg-slate-900' : 'bg-slate-300'
+                            }`}
+                    >
+                        <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${formData.multiLanguageCompliance ? 'translate-x-6' : 'translate-x-1'
+                                }`}
+                        />
+                    </button>
+                </div>
+            </div>
+
+            {/* Review & Notes */}
+            <div className="border-t border-slate-200 pt-6 space-y-4">
+                <h3 className="text-base font-semibold text-slate-900 mb-4">Review & Notes</h3>
+
+                {/* Reviewer Name */}
+                <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Reviewer Name
+                    </label>
+                    <input
+                        type="text"
+                        value={formData.reviewerName}
+                        onChange={(e) => updateFormData('reviewerName', e.target.value)}
+                        placeholder="Enter reviewer name"
+                        maxLength={20}
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <div className="flex justify-between mt-1">
+                        <p className="text-xs text-slate-500">
+                            Name of the person responsible for reviewing this task
+                        </p>
+                        <p className="text-xs text-slate-400">
+                            {formData.reviewerName.length}/20
+                        </p>
+                    </div>
+                </div>
+
+                {/* Reviewer Assignment */}
+                <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Reviewer Assignment
+                    </label>
+                    <input
+                        type="text"
+                        value={formData.reviewerAssignment}
+                        onChange={(e) => updateFormData('reviewerAssignment', e.target.value)}
+                        placeholder="reviewer@example.com; reviewer2@example.com"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <p className="text-xs text-slate-500 mt-1">
+                        High risk tasks (e.g., sales) must specify reviewer email. Separate multiple emails with semicolons
+                    </p>
+                </div>
+
+                {/* Notes */}
+                <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Notes
+                    </label>
+                    <textarea
+                        value={formData.notes}
+                        onChange={(e) => updateFormData('notes', e.target.value)}
+                        placeholder="Enter task notes (internal use only)"
+                        rows={3}
+                        maxLength={700}
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    />
+                    <div className="flex justify-end mt-1">
+                        <p className="text-xs text-slate-400">
+                            {formData.notes.length}/700
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     );
