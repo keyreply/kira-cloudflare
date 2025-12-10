@@ -1,0 +1,226 @@
+# PPP Academy Worker Configuration Example
+# Copy this file to wrangler.toml and update with your actual values
+
+name = "ppp-academy-api"
+main = "src/index.js"
+compatibility_date = "2025-01-04"
+node_compat = true
+
+# Worker settings
+[build]
+command = ""
+
+[observability]
+enabled = true
+
+# Environment variables
+[vars]
+ENVIRONMENT = "development"
+
+# ============================================
+# Workers AI Binding
+# ============================================
+[ai]
+binding = "AI"
+
+# ============================================
+# Vectorize (Vector Database for RAG)
+# ============================================
+# Create with: wrangler vectorize create ppp-academy-embeddings --dimensions=768 --metric=cosine
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "ppp-academy-embeddings"
+
+# ============================================
+# R2 Buckets
+# ============================================
+
+# Document storage for RAG system
+# Create with: wrangler r2 bucket create ppp-academy-documents
+[[r2_buckets]]
+binding = "DOCS_BUCKET"
+bucket_name = "ppp-academy-documents"
+
+# Email attachments storage
+[[r2_buckets]]
+binding = "EMAIL_BUCKET"
+bucket_name = "ppp-academy-emails"
+
+# General file storage
+[[r2_buckets]]
+binding = "FILES_BUCKET"
+bucket_name = "ppp-academy-files"
+
+# ============================================
+# D1 Database
+# ============================================
+# Create with: wrangler d1 create ppp-academy-db
+[[d1_databases]]
+binding = "DB"
+database_name = "ppp-academy-db"
+database_id = "YOUR_DATABASE_ID_HERE"
+
+# ============================================
+# Queues
+# ============================================
+
+# Document processing queue (for RAG system)
+# Create with: wrangler queues create ppp-academy-documents
+[[queues.producers]]
+binding = "DOCUMENT_QUEUE"
+queue = "ppp-academy-documents"
+
+[[queues.consumers]]
+queue = "ppp-academy-documents"
+max_batch_size = 10
+max_batch_timeout = 30
+max_retries = 3
+dead_letter_queue = "ppp-academy-documents-dlq"
+
+# Email processing queue
+[[queues.producers]]
+binding = "EMAIL_QUEUE"
+queue = "ppp-academy-emails"
+
+[[queues.consumers]]
+queue = "ppp-academy-emails"
+max_batch_size = 5
+max_batch_timeout = 30
+max_retries = 3
+
+# Notification queue
+[[queues.producers]]
+binding = "NOTIFICATION_QUEUE"
+queue = "ppp-academy-notifications"
+
+[[queues.consumers]]
+queue = "ppp-academy-notifications"
+max_batch_size = 20
+max_batch_timeout = 10
+max_retries = 3
+
+# ============================================
+# Durable Objects
+# ============================================
+
+# Tenant management
+[[durable_objects.bindings]]
+name = "TENANT"
+class_name = "TenantDO"
+script_name = "ppp-academy-api"
+
+# Customer profiles
+[[durable_objects.bindings]]
+name = "CUSTOMER"
+class_name = "CustomerDO"
+script_name = "ppp-academy-api"
+
+# Conversations
+[[durable_objects.bindings]]
+name = "CONVERSATION"
+class_name = "ConversationDO"
+script_name = "ppp-academy-api"
+
+# Rate limiting
+[[durable_objects.bindings]]
+name = "RATE_LIMITER"
+class_name = "RateLimiterDO"
+script_name = "ppp-academy-api"
+
+# AI Agents
+[[durable_objects.bindings]]
+name = "AGENT"
+class_name = "AgentDO"
+script_name = "ppp-academy-api"
+
+# Notifications
+[[durable_objects.bindings]]
+name = "NOTIFICATION"
+class_name = "NotificationDO"
+script_name = "ppp-academy-api"
+
+# Workflows
+[[durable_objects.bindings]]
+name = "WORKFLOW"
+class_name = "WorkflowDO"
+script_name = "ppp-academy-api"
+
+# Analytics
+[[durable_objects.bindings]]
+name = "ANALYTICS"
+class_name = "AnalyticsDO"
+script_name = "ppp-academy-api"
+
+# Durable Object migrations
+[[migrations]]
+tag = "v1"
+new_classes = ["TenantDO", "CustomerDO", "ConversationDO", "RateLimiterDO", "AgentDO", "NotificationDO", "WorkflowDO", "AnalyticsDO"]
+
+# ============================================
+# KV Namespaces (if needed)
+# ============================================
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "your-kv-namespace-id"
+
+# ============================================
+# Analytics Engine (if needed)
+# ============================================
+# [[analytics_engine_datasets]]
+# binding = "ANALYTICS"
+
+# ============================================
+# Environment-specific Configuration
+# ============================================
+
+# Development environment
+[env.development]
+name = "ppp-academy-api-dev"
+vars = { ENVIRONMENT = "development" }
+
+# Staging environment
+[env.staging]
+name = "ppp-academy-api-staging"
+vars = { ENVIRONMENT = "staging" }
+
+# Production environment
+[env.production]
+name = "ppp-academy-api"
+vars = { ENVIRONMENT = "production" }
+
+# ============================================
+# Rate Limiting
+# ============================================
+[limits]
+# Maximum CPU time per request (ms)
+cpu_ms = 50
+
+# ============================================
+# Deployment Configuration
+# ============================================
+[deploy]
+# Compatibility flags
+compatibility_flags = []
+
+# ============================================
+# Development Configuration
+# ============================================
+[dev]
+port = 8787
+local_protocol = "http"
+
+# ============================================
+# Notes
+# ============================================
+# 1. Replace YOUR_DATABASE_ID_HERE with your actual D1 database ID
+# 2. Create all required resources before deploying:
+#    - Vectorize index
+#    - R2 buckets
+#    - D1 database
+#    - Queues
+# 3. Run migrations after creating D1 database:
+#    wrangler d1 execute ppp-academy-db --file=migrations/001_initial_schema.sql
+#    wrangler d1 execute ppp-academy-db --file=migrations/002_additional_tables.sql
+#    wrangler d1 execute ppp-academy-db --file=migrations/003_create_documents_tables.sql
+# 4. Deploy with: wrangler deploy
+# 5. Monitor with: wrangler tail

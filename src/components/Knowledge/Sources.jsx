@@ -85,9 +85,9 @@ export default function Sources({ activeView, setActiveView, onArticleCreate }) 
                         <DocumentTextIcon className="w-6 h-6 text-slate-600" />
                     </div>
                     <div className="flex-1">
-                        <h3 className="font-semibold text-slate-900 mb-1">Public articles</h3>
+                        <h3 className="font-semibold text-slate-900 mb-1">Public Articles</h3>
                         <p className="text-sm text-slate-600">
-                            Let Kira AI Agent and Copilot use public articles from your Help Center.
+                            Enable AI Agent and Copilot to use public articles from your Help Center.
                         </p>
                     </div>
                 </div>
@@ -103,9 +103,9 @@ export default function Sources({ activeView, setActiveView, onArticleCreate }) 
                         <FolderIcon className="w-6 h-6 text-slate-600" />
                     </div>
                     <div className="flex-1">
-                        <h3 className="font-semibold text-slate-900 mb-1">Internal articles</h3>
+                        <h3 className="font-semibold text-slate-900 mb-1">Internal Articles</h3>
                         <p className="text-sm text-slate-600">
-                            Give Copilot internal knowledge only available to you and your team.
+                            Provide Copilot with internal knowledge accessible only to your team.
                         </p>
                     </div>
                 </div>
@@ -125,9 +125,9 @@ export default function Sources({ activeView, setActiveView, onArticleCreate }) 
                         <span className="text-white text-lg">🤖</span>
                     </div>
                     <div className="flex-1">
-                        <h3 className="font-semibold text-slate-900 mb-1">Internal articles</h3>
+                        <h3 className="font-semibold text-slate-900 mb-1">Internal Articles</h3>
                         <p className="text-sm text-slate-600">
-                            Give AI Copilot internal knowledge that's only available to you and your team.
+                            Provide AI Copilot with internal knowledge accessible only to your team.
                         </p>
                     </div>
                 </div>
@@ -143,9 +143,9 @@ export default function Sources({ activeView, setActiveView, onArticleCreate }) 
                         <span className="text-white text-lg">💬</span>
                     </div>
                     <div className="flex-1">
-                        <h3 className="font-semibold text-slate-900 mb-1">Conversations</h3>
+                        <h3 className="font-semibold text-slate-900 mb-1">Conversation History</h3>
                         <p className="text-sm text-slate-600">
-                            Let AI Copilot learn from past conversations and customer tickets from the last 4 months.
+                            Allow AI Copilot to learn from past conversations and support tickets from the last 4 months.
                         </p>
                     </div>
                 </div>
@@ -156,9 +156,9 @@ export default function Sources({ activeView, setActiveView, onArticleCreate }) 
                         <span className="font-medium">Intercom</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <span className="text-sm text-slate-600">All teammates' conversations</span>
+                        <span className="text-sm text-slate-600">All team conversations</span>
                         <button className="text-sm text-slate-600 hover:text-slate-700 font-medium">
-                            Manage
+                            Configure
                         </button>
                     </div>
                 </div>
@@ -270,7 +270,7 @@ export default function Sources({ activeView, setActiveView, onArticleCreate }) 
                 {activeView === 'ai-agent' && renderAllSources()}
                 {activeView === 'help-center' && (
                     <div className="text-center py-12">
-                        <p className="text-slate-500">Help Center configuration coming soon...</p>
+                        <p className="text-slate-500">Help Center configuration is coming soon</p>
                     </div>
                 )}
             </div>

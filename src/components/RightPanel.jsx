@@ -57,13 +57,13 @@ export function RightPanel({
                     className={`flex-1 p-3.5 text-center text-[13px] font-medium text-slate-500 cursor-pointer border-b-2 border-transparent transition-all duration-150 pl-8 ${activePanel === 'profile' ? 'text-blue-500 border-b-blue-500 bg-slate-50' : ''}`}
                     onClick={() => setActivePanel('profile')}
                 >
-                    Tags & Status
+                    Details
                 </div>
                 <div
                     className={`flex-1 p-3.5 text-center text-[13px] font-medium text-slate-500 cursor-pointer border-b-2 border-transparent transition-all duration-150 ${activePanel === 'logs' ? 'text-blue-500 border-b-blue-500 bg-slate-50' : ''}`}
                     onClick={() => setActivePanel('logs')}
                 >
-                    {interactionMode === 'interactive' ? 'Activity Logs' : 'Backend Logs'}
+                    {interactionMode === 'interactive' ? 'Activity' : 'System Logs'}
                 </div>
             </div>
 
@@ -72,16 +72,16 @@ export function RightPanel({
                     <>
                         {interactionMode === 'interactive' && (
                             <div className="mb-6">
-                                <div className="text-[11px] font-bold uppercase tracking-wide text-slate-500 mb-3">Conversation Progress</div>
+                                <div className="text-[11px] font-bold uppercase tracking-wide text-slate-500 mb-3">Conversation Summary</div>
                                 <div className="bg-slate-50 rounded-lg p-4 mb-3">
                                     <div className="flex justify-between items-center mb-2.5">
-                                        <span className="text-xs text-slate-500">Messages Exchanged</span>
+                                        <span className="text-xs text-slate-500">Messages</span>
                                         <span className="text-[13px] font-semibold">{messagesToShow.length}</span>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <span className="text-xs text-slate-500">Current Mode</span>
+                                        <span className="text-xs text-slate-500">Mode</span>
                                         <span className="text-[13px] font-semibold">
-                                            {currentStep < (scenario.steps?.length || 0) - 1 ? 'Guided' : 'Free-form'}
+                                            {currentStep < (scenario.steps?.length || 0) - 1 ? 'Guided' : 'Open'}
                                         </span>
                                     </div>
                                 </div>
@@ -90,18 +90,18 @@ export function RightPanel({
 
                         {interactionMode === 'static' && scenario.currentStatus && (
                             <div className="mb-6">
-                                <div className="text-[11px] font-bold uppercase tracking-wide text-slate-500 mb-3">Current Status</div>
+                                <div className="text-[11px] font-bold uppercase tracking-wide text-slate-500 mb-3">Status</div>
                                 <div className="bg-slate-50 rounded-lg p-4 mb-3">
                                     <div className="flex justify-between items-center mb-2.5">
-                                        <span className="text-xs text-slate-500">User Intent</span>
+                                        <span className="text-xs text-slate-500">Customer Intent</span>
                                         <span className="text-[13px] font-semibold">{scenario.currentStatus.intent}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2.5">
-                                        <span className="text-xs text-slate-500">Next Action</span>
+                                        <span className="text-xs text-slate-500">Next Step</span>
                                         <span className="text-[13px] font-semibold">{scenario.currentStatus.nextAction}</span>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <span className="text-xs text-slate-500">Queue Status</span>
+                                        <span className="text-xs text-slate-500">Queue</span>
                                         <span className="text-[13px] font-semibold">{scenario.currentStatus.queue}</span>
                                     </div>
                                 </div>
@@ -110,7 +110,7 @@ export function RightPanel({
 
                         {scenario.tags && scenario.tags.length > 0 && (
                             <div className="mb-6">
-                                <div className="text-[11px] font-bold uppercase tracking-wide text-slate-500 mb-3">Active Tags ({scenario.tags.length})</div>
+                                <div className="text-[11px] font-bold uppercase tracking-wide text-slate-500 mb-3">Tags ({scenario.tags.length})</div>
                                 <div className="flex flex-col gap-2.5">
                                     {scenario.tags.map((tag, index) => {
                                         const IconComponent = getIconComponent(tag.icon);
@@ -141,7 +141,7 @@ export function RightPanel({
                 ) : (
                     <div className="mb-6">
                         <div className="text-[11px] font-bold uppercase tracking-wide text-slate-500 mb-3">
-                            {interactionMode === 'interactive' ? 'Real-time Activity' : 'Processing Logs'}
+                            {interactionMode === 'interactive' ? 'Recent Activity' : 'Processing History'}
                         </div>
                         <div className="flex flex-col gap-3">
                             {conversationLogs.map((log, index) => (
@@ -158,7 +158,7 @@ export function RightPanel({
                             ))}
                             {conversationLogs.length === 0 && (
                                 <div className="text-[13px] text-slate-500 text-center p-5">
-                                    {interactionMode === 'interactive' ? 'Activity logs will appear as you interact' : 'No logs available for this case'}
+                                    {interactionMode === 'interactive' ? 'Activity will appear as you interact' : 'No activity recorded'}
                                 </div>
                             )}
                         </div>

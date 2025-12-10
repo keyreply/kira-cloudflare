@@ -33,7 +33,7 @@ export default function NewContentModal({ onClose, onCreateArticle }) {
             <div className="bg-white rounded-lg shadow-xl w-full max-w-lg">
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 pt-6 pb-4">
-                    <h2 className="text-lg font-semibold">Add content from Notion</h2>
+                    <h2 className="text-lg font-semibold">Import from Notion</h2>
                     <button
                         onClick={onClose}
                         className="text-slate-400 hover:text-slate-600"
@@ -66,7 +66,7 @@ export default function NewContentModal({ onClose, onCreateArticle }) {
                     {/* Choose your Notion */}
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                            Choose your Notion
+                            Notion Workspace
                         </label>
                         <select className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                             <option value="">Select workspace...</option>
@@ -76,7 +76,7 @@ export default function NewContentModal({ onClose, onCreateArticle }) {
                     {/* Select a Notion */}
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                            Select a Notion
+                            Database
                         </label>
                         <select className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                             <option value="">Select database...</option>
@@ -86,7 +86,7 @@ export default function NewContentModal({ onClose, onCreateArticle }) {
                     {/* Select folders */}
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                            Select folders:
+                            Destination Folder
                         </label>
                         <select
                             value={folder}
@@ -104,7 +104,7 @@ export default function NewContentModal({ onClose, onCreateArticle }) {
                     {/* Choose how to connect your data */}
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-3">
-                            Choose how to connect your data
+                            Import Method
                         </label>
                         <div className="space-y-3">
                             <label className="flex items-start gap-3 cursor-pointer">
@@ -116,9 +116,9 @@ export default function NewContentModal({ onClose, onCreateArticle }) {
                                     className="mt-0.5"
                                 />
                                 <div className="flex-1">
-                                    <div className="text-sm font-medium text-slate-900">Sync content</div>
+                                    <div className="text-sm font-medium text-slate-900">Sync (Auto-update)</div>
                                     <div className="text-xs text-slate-500">
-                                        Sync a continuously updated view-only version of your content
+                                        Keep content synchronized with your Notion workspace
                                     </div>
                                 </div>
                             </label>
@@ -131,7 +131,7 @@ export default function NewContentModal({ onClose, onCreateArticle }) {
                                     className="mt-0.5"
                                 />
                                 <div className="flex-1">
-                                    <div className="text-sm font-medium text-slate-900">Import content</div>
+                                    <div className="text-sm font-medium text-slate-900">One-time Import</div>
                                 </div>
                             </label>
                         </div>

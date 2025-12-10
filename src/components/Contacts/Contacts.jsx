@@ -33,7 +33,7 @@ export default function Contacts() {
         <div className="flex-1 flex flex-col bg-white">
             {/* Header */}
             <div className="p-6 border-b border-slate-200">
-                <h1 className="text-2xl font-bold text-slate-900 mb-4">All users</h1>
+                <h1 className="text-2xl font-bold text-slate-900 mb-4">All Contacts</h1>
 
                 {/* Identity Verification Banner */}
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-start gap-3">
@@ -42,9 +42,9 @@ export default function Contacts() {
                     </svg>
                     <div className="flex-1">
                         <p className="text-sm text-blue-900">
-                            Enforce identity verification to protect customer conversations and prevent impersonation.{' '}
+                            Enable identity verification to secure customer conversations and prevent unauthorized access.{' '}
                             <a href="#" className="text-blue-600 font-medium hover:text-blue-700 underline">
-                                Set up identity verification.
+                                Configure identity verification
                             </a>
                         </p>
                     </div>
@@ -57,26 +57,26 @@ export default function Contacts() {
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
-                            Users
+                            Contacts
                         </button>
                         <button className="px-4 py-2 border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2">
                             <FunnelIcon className="w-4 h-4" />
-                            Add filter
+                            Filter
                         </button>
                         <div className="px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 flex items-center gap-2">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
-                            {contactsData.length} users
+                            {contactsData.length} contacts
                         </div>
                         <button className="px-4 py-2 border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                             </svg>
-                            New message
+                            Send Message
                         </button>
                         <button className="px-4 py-2 border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
-                            Add tag
+                            Add Tag
                         </button>
                         <button className="px-4 py-2 border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2">
                             More
@@ -94,7 +94,7 @@ export default function Contacts() {
                         </button>
                         <button className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2">
                             <PlusIcon className="w-4 h-4" />
-                            New users onboarding
+                            Add Contact
                         </button>
                     </div>
                 </div>
@@ -126,16 +126,16 @@ export default function Contacts() {
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    Last seen
+                                    Last Active
                                     <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </div>
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">TYPE</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">FIRST SEEN</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">SIGNED UP</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">WEB SESSIONS</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">FIRST CONTACT</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">REGISTERED</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">SESSIONS</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-slate-200">

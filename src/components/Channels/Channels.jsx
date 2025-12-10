@@ -21,14 +21,14 @@ const Channels = () => {
     }
 
     const channels = [
-        { id: 'widget', name: 'Widget', icon: ChatBubbleLeftRightIcon, color: 'text-blue-500 bg-blue-50', status: 'Embedded in your plan', recommended: true, onClick: () => { } },
-        { id: 'whatsapp', name: 'WhatsApp', icon: ChatBubbleLeftRightIcon, color: 'text-green-500 bg-green-50', status: 'Respond to WhatsApp messages and broadcast', recommended: true, onClick: () => setActiveChannel('whatsapp') },
-        { id: 'phone', name: 'Phone', icon: PhoneIcon, color: 'text-green-500 bg-green-50', status: 'Make and accept calls directly', recommended: true, onClick: () => setActiveChannel('phone') },
+        { id: 'widget', name: 'Chat Widget', icon: ChatBubbleLeftRightIcon, color: 'text-blue-500 bg-blue-50', status: 'Included in your plan', recommended: true, onClick: () => { } },
+        { id: 'whatsapp', name: 'WhatsApp', icon: ChatBubbleLeftRightIcon, color: 'text-green-500 bg-green-50', status: 'Send and receive WhatsApp messages', recommended: true, onClick: () => setActiveChannel('whatsapp') },
+        { id: 'phone', name: 'Phone', icon: PhoneIcon, color: 'text-green-500 bg-green-50', status: 'Make and receive phone calls', recommended: true, onClick: () => setActiveChannel('phone') },
         { id: 'email', name: 'Email', icon: EnvelopeIcon, color: 'text-red-500 bg-red-50', status: 'Included in your plan', recommended: false, onClick: () => { } },
-        { id: 'instagram', name: 'Instagram', icon: DevicePhoneMobileIcon, color: 'text-pink-500 bg-pink-50', status: 'Respond to Instagram messages and stories', recommended: false, onClick: () => { } },
-        { id: 'facebook', name: 'Facebook', icon: DevicePhoneMobileIcon, color: 'text-blue-600 bg-blue-50', status: 'Respond to Facebook messages without switching', recommended: false, onClick: () => { } },
-        { id: 'slack', name: 'Slack', icon: ChatBubbleLeftRightIcon, color: 'text-purple-500 bg-purple-50', status: 'Collaborate directly from Slack channels', recommended: false, onClick: () => { } },
-        { id: 'sms', name: 'SMS', icon: DevicePhoneMobileIcon, color: 'text-green-500 bg-green-50', status: 'Send and receive SMS messages', recommended: false, onClick: () => { } },
+        { id: 'instagram', name: 'Instagram', icon: DevicePhoneMobileIcon, color: 'text-pink-500 bg-pink-50', status: 'Manage Instagram messages and story replies', recommended: false, onClick: () => { } },
+        { id: 'facebook', name: 'Facebook', icon: DevicePhoneMobileIcon, color: 'text-blue-600 bg-blue-50', status: 'Handle Facebook Messenger conversations', recommended: false, onClick: () => { } },
+        { id: 'slack', name: 'Slack', icon: ChatBubbleLeftRightIcon, color: 'text-purple-500 bg-purple-50', status: 'Collaborate through Slack channels', recommended: false, onClick: () => { } },
+        { id: 'sms', name: 'SMS', icon: DevicePhoneMobileIcon, color: 'text-green-500 bg-green-50', status: 'Send and receive text messages', recommended: false, onClick: () => { } },
     ];
 
     return (
@@ -43,8 +43,8 @@ const Channels = () => {
             <main className="flex-1 p-8 overflow-y-auto">
                 <div className="max-w-6xl mx-auto">
                     <div className="mb-8">
-                        <h1 className="text-2xl font-bold text-gray-900 mb-2">Every channel, one inbox</h1>
-                        <p className="text-gray-600">Connect every messaging channel you use and respond to each from your team's one inbox.<br />Collaborate with teammates before and send replies and prioritize and resolve issues faster.</p>
+                        <h1 className="text-2xl font-bold text-gray-900 mb-2">All Channels, One Inbox</h1>
+                        <p className="text-gray-600">Connect all your messaging channels and manage conversations from a unified inbox.<br />Collaborate with your team, prioritize responses, and resolve customer inquiries efficiently.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -67,13 +67,13 @@ const Channels = () => {
                                 {channel.id === 'widget' && (
                                     <div className="mt-2 flex items-center gap-1 text-xs text-green-600 font-medium">
                                         <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                                        Embedded in your plan
+                                        Active
                                     </div>
                                 )}
                                 {channel.id === 'email' && (
                                     <div className="mt-2 flex items-center gap-1 text-xs text-green-600 font-medium">
                                         <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                                        Embedded in your plan
+                                        Active
                                     </div>
                                 )}
                             </div>

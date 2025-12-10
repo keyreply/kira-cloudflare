@@ -81,7 +81,7 @@ export default function Content({ onArticleSelect }) {
                                 <FolderIcon className="w-12 h-12 text-slate-300 mx-auto mb-3" />
                                 <p className="text-slate-600">This folder is empty</p>
                                 <button className="mt-4 text-sm text-blue-600 hover:text-blue-700 font-medium">
-                                    Add article
+                                    Add Article
                                 </button>
                             </div>
                         )

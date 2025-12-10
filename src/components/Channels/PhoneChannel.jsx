@@ -26,7 +26,7 @@ const PhoneChannel = ({ onBack }) => {
                     <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <ArrowLeftIcon className="w-5 h-5 text-gray-500" />
                     </button>
-                    <h1 className="text-lg font-bold text-gray-900">Phone calls</h1>
+                    <h1 className="text-lg font-bold text-gray-900">Phone</h1>
                 </div>
                 <button className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg border border-gray-200">
                     <BookOpenIcon className="w-4 h-4" />
@@ -47,11 +47,11 @@ const PhoneChannel = ({ onBack }) => {
                         </div>
 
                         <div className="mb-6">
-                            <p className="text-sm text-gray-600 mb-2">Inbound and outbound phone calls</p>
-                            <p className="text-sm text-gray-500 mb-4">Phone numbers are charged by month and phone calls are charged per minute. See <a href="#" className="text-blue-600">costs</a> and <a href="#" className="text-blue-600">terms of service</a>.</p>
+                            <p className="text-sm text-gray-600 mb-2">Inbound and outbound calling</p>
+                            <p className="text-sm text-gray-500 mb-4">Phone numbers are billed monthly and calls are billed per minute. View <a href="#" className="text-blue-600">pricing</a> and <a href="#" className="text-blue-600">terms of service</a>.</p>
                             <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
                                 <PlusIcon className="w-4 h-4" />
-                                Purchase new number
+                                Add Phone Number
                             </button>
                         </div>
 
@@ -102,7 +102,7 @@ const PhoneChannel = ({ onBack }) => {
 
                         {/* Wrap up time */}
                         <div>
-                            <h4 className="text-sm font-medium text-gray-900 mb-2">Wrap up time</h4>
+                            <h4 className="text-sm font-medium text-gray-900 mb-2">Post-Call Wrap-Up</h4>
                             <div className="flex items-center gap-3 mb-2">
                                 <input
                                     type="checkbox"
@@ -110,7 +110,7 @@ const PhoneChannel = ({ onBack }) => {
                                     onChange={(e) => setWrapUpTime(e.target.checked)}
                                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                 />
-                                <span className="text-sm text-gray-600">Allow agents post-call wrap-up time before they receive their next call</span>
+                                <span className="text-sm text-gray-600">Give agents time to complete notes before receiving the next call</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <input
@@ -154,9 +154,9 @@ const PhoneChannel = ({ onBack }) => {
                                             <div className={`w-4 h-4 bg-white rounded-full transition-transform ${editingNumber.outbound ? 'translate-x-4' : ''}`} />
                                         </div>
                                         <div>
-                                            <span className="text-sm font-medium text-gray-900">Outbound phone calls</span>
+                                            <span className="text-sm font-medium text-gray-900">Outbound Calls</span>
                                             <span className="ml-2 bg-green-100 text-green-700 text-[10px] px-1.5 py-0.5 rounded font-medium">On</span>
-                                            <p className="text-xs text-gray-500 mt-0.5">Teammates can place phone calls to a customer's phone number in the Inbox</p>
+                                            <p className="text-xs text-gray-500 mt-0.5">Allow team members to make calls to customers from the inbox</p>
                                         </div>
                                     </div>
                                 </div>
@@ -167,39 +167,39 @@ const PhoneChannel = ({ onBack }) => {
                                             <div className={`w-4 h-4 bg-white rounded-full transition-transform ${editingNumber.inbound ? 'translate-x-4' : ''}`} />
                                         </div>
                                         <div>
-                                            <span className="text-sm font-medium text-gray-900">Inbound phone calls</span>
+                                            <span className="text-sm font-medium text-gray-900">Inbound Calls</span>
                                             <span className="ml-2 bg-green-100 text-green-700 text-[10px] px-1.5 py-0.5 rounded font-medium">On</span>
-                                            <p className="text-xs text-gray-500 mt-0.5">Allows your customers to place phone calls to this number. Calls will be routed to teammates in the Help Desk</p>
+                                            <p className="text-xs text-gray-500 mt-0.5">Accept incoming calls from customers. Calls will be routed to available team members</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-900 mb-2">Welcome greeting</label>
-                                <textarea rows={3} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none" />
+                                <label className="block text-sm font-medium text-gray-900 mb-2">Welcome Message</label>
+                                <textarea rows={3} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none" placeholder="Enter a greeting message for callers" />
                                 <p className="text-xs text-gray-500 mt-1 text-right">255 characters remaining</p>
                             </div>
 
                             <div className="border border-gray-200 rounded-xl p-4">
-                                <h4 className="text-sm font-medium text-gray-900 mb-3">Routing</h4>
+                                <h4 className="text-sm font-medium text-gray-900 mb-3">Call Routing</h4>
                                 <div className="space-y-3">
                                     <label className="flex items-center gap-3">
                                         <input type="radio" name="routing" defaultChecked className="text-gray-900 focus:ring-gray-900" />
-                                        <span className="text-sm text-gray-700">Configure with a <span className="inline-flex items-center gap-1 bg-gray-100 px-1.5 py-0.5 rounded text-xs font-medium">⚙️ workflow</span></span>
+                                        <span className="text-sm text-gray-700">Use <span className="inline-flex items-center gap-1 bg-gray-100 px-1.5 py-0.5 rounded text-xs font-medium">⚙️ workflow</span> rules</span>
                                     </label>
                                     <label className="flex items-center gap-3">
                                         <input type="radio" name="routing" className="text-gray-900 focus:ring-gray-900" />
                                         <span className="text-sm text-gray-700 flex items-center gap-2">
                                             Assign to
                                             <select className="bg-gray-100 border-none text-xs rounded py-1 pl-2 pr-6 font-medium">
-                                                <option>Team with Manual</option>
+                                                <option>Manual Assignment</option>
                                             </select>
                                         </span>
                                     </label>
                                     <label className="flex items-center gap-3">
                                         <input type="radio" name="routing" className="text-gray-900 focus:ring-gray-900" />
-                                        <span className="text-sm text-gray-700">Assign to Workspace</span>
+                                        <span className="text-sm text-gray-700">Route to Workspace</span>
                                     </label>
                                 </div>
                             </div>

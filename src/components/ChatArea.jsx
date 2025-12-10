@@ -103,7 +103,7 @@ export function ChatArea({
                             <h3 className="text-[15px] font-semibold mb-0.5">{scenario.name}</h3>
                             <p className="text-xs text-slate-500 flex items-center gap-1">
                                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                                Active conversation
+                                Online
                             </p>
                         </div>
                     </div>
@@ -179,7 +179,7 @@ export function ChatArea({
                             <div className="mt-4 p-4 bg-white border border-slate-200 rounded-xl animate-[slideIn_0.3s_ease] shadow-sm">
                                 <div className="flex items-center gap-2 text-xs text-slate-500 mb-3">
                                     <SparklesIcon className="w-4 h-4" />
-                                    <span>Choose your response:</span>
+                                    <span>Select a response:</span>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     {messagesToShow[messagesToShow.length - 1].options.map((option, idx) => (
@@ -213,7 +213,7 @@ export function ChatArea({
                         <div className="flex-1 relative">
                             <textarea
                                 className="w-full p-3 px-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-inherit resize-none outline-none min-h-[44px] max-h-[120px] focus:border-blue-500 focus:bg-white transition-colors duration-150"
-                                placeholder="Message..."
+                                placeholder="Type a message..."
                                 value={userInput}
                                 onChange={(e) => setUserInput(e.target.value)}
                                 onKeyPress={(e) => {
