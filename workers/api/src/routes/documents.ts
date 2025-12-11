@@ -16,7 +16,7 @@ documents.get('/', async (c) => {
 
   try {
     const { results } = await c.env.DB.prepare(`
-      SELECT id, original_name, content_type, file_size, status, storage_path,
+      SELECT id, filename, mime_type, file_size, status, storage_path,
              metadata, created_at, updated_at
       FROM documents
       WHERE tenant_id = ?
@@ -24,10 +24,17 @@ documents.get('/', async (c) => {
       LIMIT 100
     `).bind(tenantId).all();
 
-    // Parse metadata JSON for each document
+    // Parse metadata JSON and map column names for API compatibility
     const documents = results.map(doc => ({
-      ...doc,
-      metadata: doc.metadata ? JSON.parse(doc.metadata as string) : {}
+      id: doc.id,
+      original_name: doc.filename,
+      content_type: doc.mime_type,
+      file_size: doc.file_size,
+      status: doc.status,
+      storage_path: doc.storage_path,
+      metadata: doc.metadata ? JSON.parse(doc.metadata as string) : {},
+      created_at: doc.created_at,
+      updated_at: doc.updated_at
     }));
 
     return c.json({ documents });
@@ -47,19 +54,27 @@ documents.get('/:id', async (c) => {
   const id = c.req.param('id');
 
   try {
-    const document = await c.env.DB.prepare(`
+    const doc = await c.env.DB.prepare(`
       SELECT * FROM documents WHERE id = ? AND tenant_id = ?
     `).bind(id, tenantId).first();
 
-    if (!document) {
+    if (!doc) {
       return c.json({ error: 'Document not found' }, 404);
     }
 
     // AI Search handles chunking automatically - no chunks table needed
+    // Map column names for API compatibility
     return c.json({
       document: {
-        ...document,
-        metadata: document.metadata ? JSON.parse(document.metadata as string) : {}
+        id: doc.id,
+        original_name: doc.filename,
+        content_type: doc.mime_type,
+        file_size: doc.file_size,
+        status: doc.status,
+        storage_path: doc.storage_path,
+        metadata: doc.metadata ? JSON.parse(doc.metadata as string) : {},
+        created_at: doc.created_at,
+        updated_at: doc.updated_at
       }
     });
   } catch (error) {
@@ -176,7 +191,7 @@ documents.get('/:id/download', async (c) => {
 
   try {
     const document = await c.env.DB.prepare(`
-      SELECT storage_path, original_name, content_type FROM documents
+      SELECT storage_path, filename, mime_type FROM documents
       WHERE id = ? AND tenant_id = ?
     `).bind(id, tenantId).first();
 
@@ -192,8 +207,8 @@ documents.get('/:id/download', async (c) => {
 
     return new Response(r2Object.body, {
       headers: {
-        'Content-Type': document.content_type as string || 'application/octet-stream',
-        'Content-Disposition': `attachment; filename="${document.original_name}"`,
+        'Content-Type': document.mime_type as string || 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="${document.filename}"`,
         'Content-Length': r2Object.size.toString()
       }
     });

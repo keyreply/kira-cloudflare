@@ -74,13 +74,12 @@ upload.post('/', async (c) => {
 
     // Store document metadata in D1 for management/listing
     await c.env.DB.prepare(`
-      INSERT INTO documents (id, tenant_id, user_id, filename, original_name, content_type, file_size, storage_path, status, metadata, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO documents (id, tenant_id, user_id, filename, mime_type, file_size, storage_path, status, metadata, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       documentId,
       tenantId,
       userId,
-      r2Key,
       file.name,
       file.type,
       file.size,
@@ -207,13 +206,12 @@ upload.post('/batch', async (c) => {
       });
 
       await c.env.DB.prepare(`
-        INSERT INTO documents (id, tenant_id, user_id, filename, original_name, content_type, file_size, storage_path, status, metadata, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO documents (id, tenant_id, user_id, filename, mime_type, file_size, storage_path, status, metadata, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(
         documentId,
         tenantId,
         userId,
-        r2Key,
         file.name,
         file.type,
         file.size,
