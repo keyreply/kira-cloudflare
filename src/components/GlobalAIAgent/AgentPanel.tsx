@@ -82,14 +82,12 @@ const AgentPanel: React.FC<AgentPanelProps> = ({
 
     const recognitionRef = useRef<SpeechRecognition | null>(null);
     const sourcePickerRef = useRef<HTMLDivElement>(null);
+    const voiceInputRef = useRef<string>('');
 
     // AI SDK useChat hook for streaming chat
     const {
         messages,
-        input,
-        setInput,
-        handleInputChange,
-        handleSubmit,
+        append,
         isLoading,
         stop,
         reload,
@@ -127,6 +125,7 @@ const AgentPanel: React.FC<AgentPanelProps> = ({
             recognitionRef.current.onstart = () => {
                 setIsRecording(true);
                 setInterimTranscript('');
+                voiceInputRef.current = '';
             };
 
             recognitionRef.current.onresult = (event) => {
@@ -143,7 +142,7 @@ const AgentPanel: React.FC<AgentPanelProps> = ({
                 }
 
                 if (final) {
-                    setInput(prev => prev + final + ' ');
+                    voiceInputRef.current += final + ' ';
                     setInterimTranscript('');
                 } else {
                     setInterimTranscript(interim);
@@ -154,6 +153,7 @@ const AgentPanel: React.FC<AgentPanelProps> = ({
                 console.error('Speech recognition error:', event.error);
                 setIsRecording(false);
                 setInterimTranscript('');
+                voiceInputRef.current = '';
 
                 if (event.error === 'not-allowed') {
                     alert('Microphone permission denied. Please allow microphone access in browser settings.');
@@ -163,6 +163,15 @@ const AgentPanel: React.FC<AgentPanelProps> = ({
             recognitionRef.current.onend = () => {
                 setIsRecording(false);
                 setInterimTranscript('');
+                // Submit accumulated voice input
+                const voiceText = voiceInputRef.current.trim();
+                if (voiceText) {
+                    append({
+                        role: 'user',
+                        content: voiceText,
+                    });
+                }
+                voiceInputRef.current = '';
             };
         }
 
@@ -171,7 +180,7 @@ const AgentPanel: React.FC<AgentPanelProps> = ({
                 recognitionRef.current.stop();
             }
         };
-    }, [setInput]);
+    }, [append]);
 
     // Close source picker when clicking outside
     useEffect(() => {
@@ -211,12 +220,10 @@ const AgentPanel: React.FC<AgentPanelProps> = ({
         if (source !== knowledgeSource) {
             setKnowledgeSource(source);
         }
-        setInput(text);
-        // Submit after a short delay to allow state update
-        setTimeout(() => {
-            const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
-            handleSubmit(fakeEvent);
-        }, 100);
+        append({
+            role: 'user',
+            content: text,
+        });
     };
 
     const handleCopyMessage = async (content: string, messageId: string) => {
@@ -471,20 +478,18 @@ const AgentPanel: React.FC<AgentPanelProps> = ({
                         )}
 
                         <PromptInput
-                            onSubmit={({ text }) => {
+                            onSubmit={(message) => {
+                                const text = message?.text ?? '';
                                 if (!text.trim()) return;
-                                setInput(text);
-                                // Submit after state update
-                                setTimeout(() => {
-                                    const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
-                                    handleSubmit(fakeEvent);
-                                }, 0);
+                                // Directly append to useChat messages
+                                append({
+                                    role: 'user',
+                                    content: text,
+                                });
                             }}
                             className="rounded-xl"
                         >
                             <PromptInputTextarea
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
                                 placeholder="Ask AI anything..."
                                 disabled={isLoading}
                                 className="min-h-[44px]"
@@ -509,9 +514,8 @@ const AgentPanel: React.FC<AgentPanelProps> = ({
                                         </PromptInputButton>
                                     )}
                                     <PromptInputSubmit
-                                        status={chatStatus as 'ready' | 'streaming' | 'error'}
-                                        disabled={!input.trim() || isLoading}
-                                        className={input.trim() && !isLoading ? 'bg-indigo-500 text-white hover:bg-indigo-600' : ''}
+                                        status={chatStatus}
+                                        className="bg-indigo-500 text-white hover:bg-indigo-600 disabled:bg-slate-100 disabled:text-slate-400"
                                     >
                                         <SendIcon className="w-4 h-4" />
                                     </PromptInputSubmit>
