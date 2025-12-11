@@ -1,4 +1,4 @@
-name = "keyreply-kira-api"
+name = "ppp-academy-api"
 main = "src/index.ts"
 compatibility_date = "2025-11-27"
 account_id = "2e25a3c929c0317b8c569a9e7491cf78"
@@ -68,47 +68,46 @@ new_sqlite_classes = ["CampaignDO"]
 # R2 bucket for document storage
 [[r2_buckets]]
 binding = "DOCS_BUCKET"
-bucket_name = "keyreply-kira-docs"
+bucket_name = "ppp-academy-docs"
 
 # D1 database for relational data
 [[d1_databases]]
 binding = "DB"
-database_name = "keyreply-kira-db"
-database_id = "cafcc326-7c01-4a14-96e8-0500b26d03d6"
+database_name = "ppp-academy-db"
+database_id = "07595b3b-08e9-475e-ba87-eb981fce2dfe"
 
 # Vectorize index for RAG
-# IMPORTANT: Created with 1024 dimensions for Qwen3 Embedding model
+# IMPORTANT: Create with 1024 dimensions for Qwen3 Embedding model:
+# wrangler vectorize create ppp-academy-vectors --dimensions=1024 --metric=cosine
 [[vectorize]]
 binding = "VECTORIZE"
-index_name = "keyreply-kira-vectors"
+index_name = "ppp-academy-vectors"
 
-# Queue for document processing
+# Queue for async processing
 [[queues.producers]]
 binding = "DOCUMENT_QUEUE"
-queue = "keyreply-kira-documents"
+queue = "ppp-academy-document-processing"
 
 [[queues.consumers]]
-queue = "keyreply-kira-documents"
+queue = "ppp-academy-document-processing"
 max_batch_size = 10
 max_batch_timeout = 30
 
-# Queue for analytics events
 [[queues.producers]]
 binding = "ANALYTICS_QUEUE"
-queue = "keyreply-kira-analytics"
+queue = "ppp-academy-analytics"
 
 [[queues.consumers]]
-queue = "keyreply-kira-analytics"
+queue = "ppp-academy-analytics"
 max_batch_size = 100
 max_batch_timeout = 10
 
-# Queue for email sending
 [[queues.producers]]
 binding = "EMAIL_QUEUE"
-queue = "keyreply-kira-emails"
+queue = "ppp-academy-emails"
 
 [[queues.consumers]]
-queue = "keyreply-kira-emails"
+queue = "ppp-academy-emails"
 max_batch_size = 10
 max_batch_timeout = 5
 
@@ -134,21 +133,9 @@ EMAIL_PROVIDER = "cloudflare"
 # RESEND_API_KEY     - For production email (Resend)
 
 # ============================================
-# Production Environment
+# Production Environment (uncomment for production)
 # ============================================
-[env.production]
-name = "keyreply-kira-api"
-
-[env.production.vars]
-ENVIRONMENT = "production"
-EMAIL_PROVIDER = "resend"
-
-# ============================================
-# Staging Environment
-# ============================================
-[env.staging]
-name = "keyreply-kira-api-staging"
-
-[env.staging.vars]
-ENVIRONMENT = "staging"
-EMAIL_PROVIDER = "cloudflare"
+# [env.production.vars]
+# ENVIRONMENT = "production"
+# EMAIL_PROVIDER = "resend"
+# STT_PROVIDER = "deepgram"

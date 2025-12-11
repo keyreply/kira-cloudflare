@@ -1,4 +1,4 @@
-# PPP Academy
+# KeyReply Kira AI
 
 A modern React application built with Vite, featuring Hero Icons and Tailwind CSS.
 
@@ -20,8 +20,8 @@ A modern React application built with Vite, featuring Hero Icons and Tailwind CS
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/keyreply/ppp-academy.git
-cd ppp-academy
+git clone https://github.com/keyreply/keyreply-kira-ai.git
+cd keyreply-kira-ai
 ```
 
 2. Install dependencies:
@@ -89,7 +89,7 @@ cp .dev.vars.example .dev.vars
 ## Project Structure
 
 ```
-ppp-academy/
+keyreply-kira-ai/
 ├── src/
 │   ├── components/     # React components
 │   ├── data/          # Data files

@@ -9,7 +9,7 @@ WORKER_URL="${1:-}"
 AUTH_TOKEN="${2:-}"
 
 echo "=================================================="
-echo "PPP Academy - Email Service Verification"
+echo "KeyReply Kira AI - Email Service Verification"
 echo "=================================================="
 echo ""
 
@@ -18,7 +18,7 @@ if [ -z "$WORKER_URL" ] || [ -z "$AUTH_TOKEN" ]; then
     echo "Usage: ./verify-email-setup.sh <worker-url> <auth-token>"
     echo ""
     echo "Example:"
-    echo "  ./verify-email-setup.sh https://ppp-academy.workers.dev your-session-token"
+    echo "  ./verify-email-setup.sh https://keyreply-kira-api.workers.dev your-session-token"
     echo ""
     exit 1
 fi

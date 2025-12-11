@@ -1,4 +1,4 @@
--- PPP Academy Database Schema
+-- KeyReply Kira AI Database Schema
 -- D1 Database Migration for Email Service
 
 -- ============================================
@@ -189,7 +189,7 @@ VALUES ('user-sample-001', 'tenant-sample-001', 'admin@example.com', 'Admin User
 -- Sample email logs
 INSERT OR IGNORE INTO email_logs (id, tenant_id, to_address, subject, template, status, created_at)
 VALUES
-  ('email-001', 'tenant-sample-001', 'user@example.com', 'Welcome to PPP Academy', 'welcome', 'sent', datetime('now', '-7 days')),
+  ('email-001', 'tenant-sample-001', 'user@example.com', 'Welcome to KeyReply', 'welcome', 'sent', datetime('now', '-7 days')),
   ('email-002', 'tenant-sample-001', 'user@example.com', 'Password Reset Request', 'password-reset', 'sent', datetime('now', '-5 days')),
   ('email-003', 'tenant-sample-001', 'user@example.com', 'Document Ready', 'document-processed', 'sent', datetime('now', '-3 days')),
   ('email-004', 'tenant-sample-001', 'team@example.com', 'Join Our Team', 'invitation', 'sent', datetime('now', '-2 days')),
@@ -201,10 +201,10 @@ VALUES
 -- ============================================
 
 -- To apply this schema to your D1 database:
--- 1. wrangler d1 execute PPP_ACADEMY_DB --file=schema.sql
+-- 1. wrangler d1 execute KEYREPLY_KIRA_DB --file=schema.sql
 --
 -- To create the database:
--- 1. wrangler d1 create PPP_ACADEMY_DB
+-- 1. wrangler d1 create KEYREPLY_KIRA_DB
 --
 -- To add to wrangler.toml:
 -- [[d1_databases]]

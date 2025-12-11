@@ -2,6 +2,92 @@
 @import "tailwindcss/preflight" layer(base);
 @import "tailwindcss/utilities" layer(utilities);
 
+/* KeyReply Brand Colors - Tailwind v4 Theme Extension */
+@theme {
+    /* Primary Brand Colors */
+    --color-key-blue: #37CFFF;
+    --color-key-green: #5DE530;
+    --color-key-gray: #565856;
+    --color-key-navy: #111722;
+
+    /* Secondary Colors */
+    --color-key-teal: #34DBAE;
+    --color-key-deep-blue: #1D57D8;
+
+    /* Extended palette - lighter/darker variants */
+    --color-key-blue-50: #e6f9ff;
+    --color-key-blue-100: #b3efff;
+    --color-key-blue-200: #80e5ff;
+    --color-key-blue-300: #4ddbff;
+    --color-key-blue-400: #37CFFF;
+    --color-key-blue-500: #37CFFF;
+    --color-key-blue-600: #00b8e6;
+    --color-key-blue-700: #0099cc;
+    --color-key-blue-800: #007ab3;
+    --color-key-blue-900: #005c99;
+
+    --color-key-green-50: #eefde6;
+    --color-key-green-100: #d4f9b8;
+    --color-key-green-200: #b9f58a;
+    --color-key-green-300: #9ff15c;
+    --color-key-green-400: #5DE530;
+    --color-key-green-500: #5DE530;
+    --color-key-green-600: #4acc26;
+    --color-key-green-700: #38b31d;
+    --color-key-green-800: #269913;
+    --color-key-green-900: #14800a;
+
+    --color-key-teal-50: #e6fef7;
+    --color-key-teal-100: #b3fbe6;
+    --color-key-teal-200: #80f7d6;
+    --color-key-teal-300: #4df4c5;
+    --color-key-teal-400: #34DBAE;
+    --color-key-teal-500: #34DBAE;
+    --color-key-teal-600: #2ac299;
+    --color-key-teal-700: #20a984;
+    --color-key-teal-800: #16906f;
+    --color-key-teal-900: #0c775a;
+
+    --color-key-navy-50: #e8e9eb;
+    --color-key-navy-100: #c5c7cc;
+    --color-key-navy-200: #a2a5ad;
+    --color-key-navy-300: #7f838e;
+    --color-key-navy-400: #5c616f;
+    --color-key-navy-500: #393f50;
+    --color-key-navy-600: #2b303d;
+    --color-key-navy-700: #1d212a;
+    --color-key-navy-800: #111722;
+    --color-key-navy-900: #0a0d14;
+
+    /* Font Family */
+    --font-satoshi: 'Satoshi', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Import Satoshi Font from Fontshare */
+@font-face {
+    font-family: 'Satoshi';
+    src: url('https://cdn.fontshare.com/wf/GLOHMHNFQFPLTL6TLOXGXVZYDH2LQWMC/KVMKXDPIPGZXQH7M4N7CWGX4SZ5RQRPC/YD6VVDIBJ5DVKLQGKKJ24T5EJ3GCYZD3.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Satoshi';
+    src: url('https://cdn.fontshare.com/wf/GLOHMHNFQFPLTL6TLOXGXVZYDH2LQWMC/4OWYB5VWVVZ6LRJUGTWRJLLUFZR7YN3X/GID6XUWU5PQZGBJYXGF5YVSYVHJ2K67C.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Satoshi';
+    src: url('https://cdn.fontshare.com/wf/GLOHMHNFQFPLTL6TLOXGXVZYDH2LQWMC/D2BLHIXKJOZQNBQZ4P5KQH7QGFCNVZWL/RTKD5TCBQP5XWHQXUXYEJTEBQ6K3J7C7.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
 @keyframes slideIn {
     from {
         opacity: 0;
@@ -27,15 +113,81 @@
     }
 }
 
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(29, 87, 216, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 20px 10px rgba(29, 87, 216, 0.1);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
+    font-family: var(--font-satoshi);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #f8fafc;
+}
+
+/* Scrollbar styling for light theme */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Custom focus ring */
+.focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-[#1D57D8]/20 focus:border-[#1D57D8];
+}
+
+/* Card hover effect */
+.card-hover {
+    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
+}
+
+/* Gradient text */
+.gradient-text {
+    @apply bg-gradient-to-r from-[#1D57D8] to-[#37CFFF] bg-clip-text text-transparent;
+}
+
+/* Subtle grid pattern for backgrounds */
+.bg-grid-pattern {
+    background-image:
+        linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+        linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+    background-size: 24px 24px;
 }
