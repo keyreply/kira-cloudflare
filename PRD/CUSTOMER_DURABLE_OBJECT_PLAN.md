@@ -71,7 +71,7 @@ This plan implements a **Customer Durable Object** to represent and manage the c
 #### 1.1 wrangler.toml Configuration
 
 ```toml
-name = "ppp-academy-api"
+name = "keyreply-kira-api"
 main = "src/index.js"
 compatibility_date = "2025-11-27"
 account_id = "2e25a3c929c0317b8c569a9e7491cf78"
@@ -89,11 +89,11 @@ new_sqlite_classes = ["CustomerDO"]
 # Other bindings...
 [[r2_buckets]]
 binding = "DOCS_BUCKET"
-bucket_name = "ppp-academy-docs"
+bucket_name = "keyreply-kira-docs"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "ppp-academy-db"
+database_name = "keyreply-kira-db"
 database_id = "<your-database-id>"
 
 [ai]
@@ -394,7 +394,7 @@ export class CustomerDO extends DurableObject {
     this.sql.exec(`
       INSERT INTO messages (id, channel, direction, from_address, to_address, subject, content, content_type, reply_to_id, attachments, status, sent_at)
       VALUES (?, 'email', 'outbound', ?, ?, ?, ?, ?, ?, ?, 'pending', datetime('now'))
-    `, id, 'noreply@ppp-academy.com', toAddress, subject, content, contentType, replyToId, JSON.stringify(attachments));
+    `, id, 'noreply@kira.keyreply.com', toAddress, subject, content, contentType, replyToId, JSON.stringify(attachments));
 
     try {
       // Send via Resend
@@ -405,7 +405,7 @@ export class CustomerDO extends DurableObject {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'PPP Academy <noreply@ppp-academy.com>',
+          from: 'PPP Academy <noreply@kira.keyreply.com>',
           to: [toAddress],
           subject,
           [contentType === 'html' ? 'html' : 'text']: content,

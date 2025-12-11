@@ -23,7 +23,7 @@ emailRouter.post('/test', async (c) => {
             to: to || 'test@example.com',
             subject: 'Test Email from PPP Academy',
             html: '<h1>Test Email</h1><p>This is a test email sent from the PPP Academy API.</p>',
-            from: 'PPP Academy <noreply@ppp-academy.com>',
+            from: 'PPP Academy <noreply@kira.keyreply.com>',
             tags: ['test']
         });
 

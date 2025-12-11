@@ -22,28 +22,28 @@ binding = "AI"
 # Vectorize (768 dimensions for bge-base-en-v1.5)
 [[vectorize]]
 binding = "VECTORIZE"
-index_name = "ppp-academy-embeddings"
+index_name = "keyreply-kira-embeddings"
 dimensions = 768
 metric = "cosine"
 
 # R2 bucket for document storage
 [[r2_buckets]]
 binding = "DOCS_BUCKET"
-bucket_name = "ppp-academy-documents"
+bucket_name = "keyreply-kira-documents"
 
 # D1 database
 [[d1_databases]]
 binding = "DB"
-database_name = "ppp-academy-db"
+database_name = "keyreply-kira-db"
 database_id = "YOUR_DATABASE_ID"
 
 # Document processing queue
 [[queues.producers]]
 binding = "DOCUMENT_QUEUE"
-queue = "ppp-academy-documents"
+queue = "keyreply-kira-documents"
 
 [[queues.consumers]]
-queue = "ppp-academy-documents"
+queue = "keyreply-kira-documents"
 max_batch_size = 10
 max_batch_timeout = 30
 max_retries = 3
@@ -53,25 +53,25 @@ max_retries = 3
 
 ```bash
 # Create Vectorize index
-wrangler vectorize create ppp-academy-embeddings \
+wrangler vectorize create keyreply-kira-embeddings \
   --dimensions=768 \
   --metric=cosine
 
 # Create R2 bucket
-wrangler r2 bucket create ppp-academy-documents
+wrangler r2 bucket create keyreply-kira-documents
 
 # Create queue
-wrangler queues create ppp-academy-documents
+wrangler queues create keyreply-kira-documents
 
 # Create D1 database (if not exists)
-wrangler d1 create ppp-academy-db
+wrangler d1 create keyreply-kira-db
 ```
 
 ### 4. Create Database Tables
 
 ```bash
 # Run migrations
-wrangler d1 execute ppp-academy-db --file=migrations/create_documents_tables.sql
+wrangler d1 execute keyreply-kira-db --file=migrations/create_documents_tables.sql
 ```
 
 **SQL Migration:**
@@ -119,7 +119,7 @@ CREATE INDEX IF NOT EXISTS idx_chunks_index ON document_chunks(chunk_index);
 
 ### Upload Document
 ```bash
-curl -X POST https://api.ppp-academy.com/documents/upload \
+curl -X POST https://api.kira.keyreply.com/documents/upload \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -F "file=@document.pdf" \
   -F "title=My Document" \
@@ -129,13 +129,13 @@ curl -X POST https://api.ppp-academy.com/documents/upload \
 
 ### List Documents
 ```bash
-curl -X GET "https://api.ppp-academy.com/documents?limit=20&offset=0" \
+curl -X GET "https://api.kira.keyreply.com/documents?limit=20&offset=0" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 ### Search Documents
 ```bash
-curl -X POST https://api.ppp-academy.com/documents/search \
+curl -X POST https://api.kira.keyreply.com/documents/search \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -147,7 +147,7 @@ curl -X POST https://api.ppp-academy.com/documents/search \
 
 ### Ask Question (RAG)
 ```bash
-curl -X POST https://api.ppp-academy.com/documents/ask \
+curl -X POST https://api.kira.keyreply.com/documents/ask \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -159,26 +159,26 @@ curl -X POST https://api.ppp-academy.com/documents/ask \
 
 ### Get Document Details
 ```bash
-curl -X GET https://api.ppp-academy.com/documents/DOC_ID \
+curl -X GET https://api.kira.keyreply.com/documents/DOC_ID \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 ### Download Document
 ```bash
-curl -X GET https://api.ppp-academy.com/documents/DOC_ID/download \
+curl -X GET https://api.kira.keyreply.com/documents/DOC_ID/download \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -o document.pdf
 ```
 
 ### Delete Document
 ```bash
-curl -X DELETE https://api.ppp-academy.com/documents/DOC_ID \
+curl -X DELETE https://api.kira.keyreply.com/documents/DOC_ID \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 ### Get Statistics
 ```bash
-curl -X GET https://api.ppp-academy.com/documents/stats \
+curl -X GET https://api.kira.keyreply.com/documents/stats \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
@@ -387,17 +387,17 @@ wrangler tail
 
 ```bash
 # Send test message to queue
-wrangler queues producer publish ppp-academy-documents \
+wrangler queues producer publish keyreply-kira-documents \
   --body='{"type":"document.process","data":{"documentId":"test_doc","tenantId":"test_tenant"}}'
 
 # Monitor queue
-wrangler queues consumer worker ppp-academy-documents
+wrangler queues consumer worker keyreply-kira-documents
 ```
 
 ## Troubleshooting
 
 ### Document stuck in "pending" status
-- Check queue is running: `wrangler queues consumer worker ppp-academy-documents`
+- Check queue is running: `wrangler queues consumer worker keyreply-kira-documents`
 - Check queue messages: `wrangler tail --format json`
 - Manually trigger processing: `POST /documents/{id}/reprocess`
 
@@ -479,6 +479,6 @@ wrangler queues consumer worker ppp-academy-documents
 ## Support
 
 Questions? Issues?
-- GitHub: github.com/ppp-academy
-- Email: support@ppp-academy.com
-- Docs: docs.ppp-academy.com
+- GitHub: github.com/keyreply-kira
+- Email: support@kira.keyreply.com
+- Docs: docs.kira.keyreply.com

@@ -93,7 +93,7 @@ This plan implements a **Tenant Durable Object** to represent and manage the com
 #### 1.1 wrangler.toml Configuration
 
 ```toml
-name = "ppp-academy-api"
+name = "keyreply-kira-api"
 main = "src/index.js"
 compatibility_date = "2025-11-27"
 account_id = "2e25a3c929c0317b8c569a9e7491cf78"
@@ -116,16 +116,16 @@ new_sqlite_classes = ["TenantDO", "CustomerDO"]
 # Other bindings...
 [[r2_buckets]]
 binding = "DOCS_BUCKET"
-bucket_name = "ppp-academy-docs"
+bucket_name = "keyreply-kira-docs"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "ppp-academy-db"
+database_name = "keyreply-kira-db"
 database_id = "<your-database-id>"
 
 [[vectorize]]
 binding = "VECTORIZE"
-index_name = "ppp-academy-vectors"
+index_name = "keyreply-kira-vectors"
 
 [ai]
 binding = "AI"

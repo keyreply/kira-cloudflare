@@ -112,6 +112,12 @@ queue = "keyreply-kira-emails"
 max_batch_size = 10
 max_batch_timeout = 5
 
+
+# Workers for Platforms - Dispatch Namespace
+[[dispatch_namespaces]]
+binding = "DISPATCHER"
+namespace = "keyreply-functions"
+
 # Workers AI
 [ai]
 binding = "AI"
@@ -127,11 +133,13 @@ ENVIRONMENT = "development"
 # For Cloudflare: Uses MailChannels API (free) or EMAIL binding
 # For Resend: Set EMAIL_PROVIDER="resend" and add RESEND_API_KEY secret
 EMAIL_PROVIDER = "cloudflare"
+ACCOUNT_ID = "2e25a3c929c0317b8c569a9e7491cf78"
 
 # ============================================
 # Secrets (add via: wrangler secret put <NAME>)
 # ============================================
 # RESEND_API_KEY     - For production email (Resend)
+# CLOUDFLARE_API_TOKEN - For managing Platform Functions
 
 # ============================================
 # Production Environment

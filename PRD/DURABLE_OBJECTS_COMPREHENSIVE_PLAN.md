@@ -1945,7 +1945,7 @@ export class AnalyticsDO extends DurableObject {
 ## wrangler.toml (Complete)
 
 ```toml
-name = "ppp-academy-api"
+name = "keyreply-kira-api"
 main = "src/index.js"
 compatibility_date = "2025-11-27"
 

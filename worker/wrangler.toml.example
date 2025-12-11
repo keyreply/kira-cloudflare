@@ -1,7 +1,7 @@
 # PPP Academy Worker Configuration Example
 # Copy this file to wrangler.toml and update with your actual values
 
-name = "ppp-academy-api"
+name = "keyreply-kira-api"
 main = "src/index.js"
 compatibility_date = "2025-01-04"
 node_compat = true
@@ -26,38 +26,38 @@ binding = "AI"
 # ============================================
 # Vectorize (Vector Database for RAG)
 # ============================================
-# Create with: wrangler vectorize create ppp-academy-embeddings --dimensions=768 --metric=cosine
+# Create with: wrangler vectorize create keyreply-kira-embeddings --dimensions=768 --metric=cosine
 [[vectorize]]
 binding = "VECTORIZE"
-index_name = "ppp-academy-embeddings"
+index_name = "keyreply-kira-embeddings"
 
 # ============================================
 # R2 Buckets
 # ============================================
 
 # Document storage for RAG system
-# Create with: wrangler r2 bucket create ppp-academy-documents
+# Create with: wrangler r2 bucket create keyreply-kira-documents
 [[r2_buckets]]
 binding = "DOCS_BUCKET"
-bucket_name = "ppp-academy-documents"
+bucket_name = "keyreply-kira-documents"
 
 # Email attachments storage
 [[r2_buckets]]
 binding = "EMAIL_BUCKET"
-bucket_name = "ppp-academy-emails"
+bucket_name = "keyreply-kira-emails"
 
 # General file storage
 [[r2_buckets]]
 binding = "FILES_BUCKET"
-bucket_name = "ppp-academy-files"
+bucket_name = "keyreply-kira-files"
 
 # ============================================
 # D1 Database
 # ============================================
-# Create with: wrangler d1 create ppp-academy-db
+# Create with: wrangler d1 create keyreply-kira-db
 [[d1_databases]]
 binding = "DB"
-database_name = "ppp-academy-db"
+database_name = "keyreply-kira-db"
 database_id = "YOUR_DATABASE_ID_HERE"
 
 # ============================================
@@ -65,25 +65,25 @@ database_id = "YOUR_DATABASE_ID_HERE"
 # ============================================
 
 # Document processing queue (for RAG system)
-# Create with: wrangler queues create ppp-academy-documents
+# Create with: wrangler queues create keyreply-kira-documents
 [[queues.producers]]
 binding = "DOCUMENT_QUEUE"
-queue = "ppp-academy-documents"
+queue = "keyreply-kira-documents"
 
 [[queues.consumers]]
-queue = "ppp-academy-documents"
+queue = "keyreply-kira-documents"
 max_batch_size = 10
 max_batch_timeout = 30
 max_retries = 3
-dead_letter_queue = "ppp-academy-documents-dlq"
+dead_letter_queue = "keyreply-kira-documents-dlq"
 
 # Email processing queue
 [[queues.producers]]
 binding = "EMAIL_QUEUE"
-queue = "ppp-academy-emails"
+queue = "keyreply-kira-emails"
 
 [[queues.consumers]]
-queue = "ppp-academy-emails"
+queue = "keyreply-kira-emails"
 max_batch_size = 5
 max_batch_timeout = 30
 max_retries = 3
@@ -91,10 +91,10 @@ max_retries = 3
 # Notification queue
 [[queues.producers]]
 binding = "NOTIFICATION_QUEUE"
-queue = "ppp-academy-notifications"
+queue = "keyreply-kira-notifications"
 
 [[queues.consumers]]
-queue = "ppp-academy-notifications"
+queue = "keyreply-kira-notifications"
 max_batch_size = 20
 max_batch_timeout = 10
 max_retries = 3
@@ -107,49 +107,49 @@ max_retries = 3
 [[durable_objects.bindings]]
 name = "TENANT"
 class_name = "TenantDO"
-script_name = "ppp-academy-api"
+script_name = "keyreply-kira-api"
 
 # Customer profiles
 [[durable_objects.bindings]]
 name = "CUSTOMER"
 class_name = "CustomerDO"
-script_name = "ppp-academy-api"
+script_name = "keyreply-kira-api"
 
 # Conversations
 [[durable_objects.bindings]]
 name = "CONVERSATION"
 class_name = "ConversationDO"
-script_name = "ppp-academy-api"
+script_name = "keyreply-kira-api"
 
 # Rate limiting
 [[durable_objects.bindings]]
 name = "RATE_LIMITER"
 class_name = "RateLimiterDO"
-script_name = "ppp-academy-api"
+script_name = "keyreply-kira-api"
 
 # AI Agents
 [[durable_objects.bindings]]
 name = "AGENT"
 class_name = "AgentDO"
-script_name = "ppp-academy-api"
+script_name = "keyreply-kira-api"
 
 # Notifications
 [[durable_objects.bindings]]
 name = "NOTIFICATION"
 class_name = "NotificationDO"
-script_name = "ppp-academy-api"
+script_name = "keyreply-kira-api"
 
 # Workflows
 [[durable_objects.bindings]]
 name = "WORKFLOW"
 class_name = "WorkflowDO"
-script_name = "ppp-academy-api"
+script_name = "keyreply-kira-api"
 
 # Analytics
 [[durable_objects.bindings]]
 name = "ANALYTICS"
 class_name = "AnalyticsDO"
-script_name = "ppp-academy-api"
+script_name = "keyreply-kira-api"
 
 # Durable Object migrations
 [[migrations]]
@@ -175,17 +175,17 @@ new_classes = ["TenantDO", "CustomerDO", "ConversationDO", "RateLimiterDO", "Age
 
 # Development environment
 [env.development]
-name = "ppp-academy-api-dev"
+name = "keyreply-kira-api-dev"
 vars = { ENVIRONMENT = "development" }
 
 # Staging environment
 [env.staging]
-name = "ppp-academy-api-staging"
+name = "keyreply-kira-api-staging"
 vars = { ENVIRONMENT = "staging" }
 
 # Production environment
 [env.production]
-name = "ppp-academy-api"
+name = "keyreply-kira-api"
 vars = { ENVIRONMENT = "production" }
 
 # ============================================
@@ -219,8 +219,8 @@ local_protocol = "http"
 #    - D1 database
 #    - Queues
 # 3. Run migrations after creating D1 database:
-#    wrangler d1 execute ppp-academy-db --file=migrations/001_initial_schema.sql
-#    wrangler d1 execute ppp-academy-db --file=migrations/002_additional_tables.sql
-#    wrangler d1 execute ppp-academy-db --file=migrations/003_create_documents_tables.sql
+#    wrangler d1 execute keyreply-kira-db --file=migrations/001_initial_schema.sql
+#    wrangler d1 execute keyreply-kira-db --file=migrations/002_additional_tables.sql
+#    wrangler d1 execute keyreply-kira-db --file=migrations/003_create_documents_tables.sql
 # 4. Deploy with: wrangler deploy
 # 5. Monitor with: wrangler tail

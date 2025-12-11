@@ -59,7 +59,7 @@ This plan implements outbound email capabilities for the PPP Academy SaaS platfo
 
 1. Sign up at [resend.com](https://resend.com) (free tier: 3,000 emails/month)
 2. Go to **Domains** → **Add Domain**
-3. Enter your domain (e.g., `ppp-academy.com`)
+3. Enter your domain (e.g., `kira.keyreply.com`)
 4. Add the DNS records to Cloudflare:
 
 ```
@@ -136,7 +136,7 @@ export class EmailService {
   constructor(env) {
     this.resend = new Resend(env.RESEND_API_KEY);
     this.db = env.DB;
-    this.fromEmail = env.EMAIL_FROM || 'noreply@ppp-academy.com';
+    this.fromEmail = env.EMAIL_FROM || 'noreply@kira.keyreply.com';
     this.fromName = env.EMAIL_FROM_NAME || 'PPP Academy';
   }
 
@@ -205,7 +205,7 @@ export class EmailService {
   }
 
   async sendPasswordReset(user, resetToken) {
-    const resetUrl = `https://ppp-academy.com/reset-password?token=${resetToken}`;
+    const resetUrl = `https://kira.keyreply.com/reset-password?token=${resetToken}`;
     return this.send({
       to: user.email,
       subject: 'Reset Your Password - PPP Academy',
@@ -256,7 +256,7 @@ export class EmailService {
           </ul>
 
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://ppp-academy.com/dashboard"
+            <a href="https://kira.keyreply.com/dashboard"
                style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
               Go to Dashboard
             </a>
@@ -348,7 +348,7 @@ export class EmailService {
           <p>You can now ask Kira questions about this document, and she'll use it to provide accurate answers.</p>
 
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://ppp-academy.com/dashboard"
+            <a href="https://kira.keyreply.com/dashboard"
                style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
               Ask Kira Now
             </a>
@@ -376,10 +376,10 @@ For high-volume or non-blocking email sends, use Cloudflare Queues:
 # Add email queue
 [[queues.producers]]
 binding = "EMAIL_QUEUE"
-queue = "ppp-academy-emails"
+queue = "keyreply-kira-emails"
 
 [[queues.consumers]]
-queue = "ppp-academy-emails"
+queue = "keyreply-kira-emails"
 max_batch_size = 10
 max_batch_timeout = 5
 ```
@@ -387,7 +387,7 @@ max_batch_timeout = 5
 #### 3.2 Create Email Queue
 
 ```bash
-npx wrangler queues create ppp-academy-emails
+npx wrangler queues create keyreply-kira-emails
 ```
 
 #### 3.3 Queue Producer (Async Send)
@@ -406,7 +406,7 @@ export class EmailQueueService {
     // Log as queued
     await this.db.prepare(`
       INSERT INTO email_logs (id, user_id, to_email, from_email, subject, template, metadata, status)
-      VALUES (?, ?, ?, 'noreply@ppp-academy.com', ?, ?, ?, 'queued')
+      VALUES (?, ?, ?, 'noreply@kira.keyreply.com', ?, ?, ?, 'queued')
     `).bind(logId, userId || null, to, subject, template, JSON.stringify(metadata || {})).run();
 
     // Send to queue
@@ -643,7 +643,7 @@ When Cloudflare Email Service becomes GA, migrate to native binding:
 # Native Email Service binding (when available)
 [[email]]
 binding = "SEND_EMAIL"
-domain = "ppp-academy.com"
+domain = "kira.keyreply.com"
 ```
 
 ### Updated Email Service
@@ -661,14 +661,14 @@ export class CloudflareEmailService {
 
     await this.db.prepare(`
       INSERT INTO email_logs (id, user_id, to_email, from_email, subject, template, metadata, status)
-      VALUES (?, ?, ?, 'noreply@ppp-academy.com', ?, ?, ?, 'pending')
+      VALUES (?, ?, ?, 'noreply@kira.keyreply.com', ?, ?, ?, 'pending')
     `).bind(logId, userId, to, subject, template, JSON.stringify(metadata || {})).run();
 
     try {
       // Native Cloudflare Email Service
       await this.email.send({
         to: [{ email: to }],
-        from: { email: 'noreply@ppp-academy.com', name: 'PPP Academy' },
+        from: { email: 'noreply@kira.keyreply.com', name: 'PPP Academy' },
         subject,
         html,
         text,
@@ -714,7 +714,7 @@ npx wrangler secret put RESEND_API_KEY
 
 # Optional environment variables (in wrangler.toml)
 [vars]
-EMAIL_FROM = "noreply@ppp-academy.com"
+EMAIL_FROM = "noreply@kira.keyreply.com"
 EMAIL_FROM_NAME = "PPP Academy"
 ```
 
@@ -746,13 +746,13 @@ EMAIL_FROM_NAME = "PPP Academy"
 
 ```bash
 # 1. Create email queue
-npx wrangler queues create ppp-academy-emails
+npx wrangler queues create keyreply-kira-emails
 
 # 2. Add Resend API key
 npx wrangler secret put RESEND_API_KEY
 
 # 3. Update D1 schema
-npx wrangler d1 execute ppp-academy-db --remote --command "
+npx wrangler d1 execute keyreply-kira-db --remote --command "
   CREATE TABLE email_logs (...);
   CREATE TABLE password_resets (...);
 "

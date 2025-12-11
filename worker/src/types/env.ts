@@ -3,7 +3,7 @@
  * Matches wrangler.toml configuration
  */
 
-import type { DurableObjectNamespace, D1Database, R2Bucket, Queue, Ai } from '@cloudflare/workers-types';
+import type { DurableObjectNamespace, D1Database, R2Bucket, Queue, Ai, DispatchNamespace } from '@cloudflare/workers-types';
 
 // Queue message types
 import type { DocumentQueueMessage, AnalyticsQueueMessage, EmailQueueMessage } from './queue.ts';
@@ -79,8 +79,13 @@ export interface WorkerEnv {
   // AI binding
   AI: Ai;
 
+  // Workers for Platforms
+  DISPATCHER: DispatchNamespace;
+
   // Environment variables
   ENVIRONMENT: 'development' | 'production';
   EMAIL_PROVIDER: 'cloudflare' | 'resend';
   RESEND_API_KEY?: string;
+  ACCOUNT_ID: string;
+  CLOUDFLARE_API_TOKEN: string;
 }

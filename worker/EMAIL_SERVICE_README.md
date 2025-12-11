@@ -132,7 +132,7 @@ import { sendPasswordResetEmail } from './services/email.js';
 await sendPasswordResetEmail(env, {
   to: 'user@example.com',
   name: 'John Doe',
-  resetLink: 'https://app.ppp-academy.com/reset?token=xyz',
+  resetLink: 'https://app.kira.keyreply.com/reset?token=xyz',
   expiresIn: '1 hour'
 });
 ```
@@ -146,7 +146,7 @@ await sendInvitationEmail(env, {
   to: 'newuser@example.com',
   inviterName: 'Jane Smith',
   tenantName: 'Acme Corp',
-  inviteLink: 'https://app.ppp-academy.com/invite?token=abc',
+  inviteLink: 'https://app.kira.keyreply.com/invite?token=abc',
   role: 'Member'
 });
 ```
@@ -192,8 +192,8 @@ await sendEmail(env, {
   subject: 'Custom Subject',
   html: '<h1>Hello!</h1><p>This is a custom email.</p>',
   text: 'Hello! This is a custom email.',
-  from: 'Custom Name <custom@ppp-academy.com>',
-  replyTo: 'support@ppp-academy.com',
+  from: 'Custom Name <custom@kira.keyreply.com>',
+  replyTo: 'support@kira.keyreply.com',
   tags: ['custom', 'marketing']
 });
 ```
@@ -443,7 +443,7 @@ app.post('/auth/forgot-password', async (c) => {
   // Save token to database...
 
   // Send reset email
-  const resetLink = `https://app.ppp-academy.com/reset-password?token=${resetToken}`;
+  const resetLink = `https://app.kira.keyreply.com/reset-password?token=${resetToken}`;
   await sendPasswordResetEmail(c.env, {
     to: email,
     name: user.name,

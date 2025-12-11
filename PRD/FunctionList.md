@@ -8,13 +8,13 @@ This document tracks the implementation status of all key product modules.
 |:---|:---|:---|:---|:---|
 | **1. Dashboard & Analytics** | ✅ Completed | 🟩 100% | [ANALYTICS_PLAN](ANALYTICS_IMPLEMENTATION_PLAN.md) | D1, Recharts |
 | **2. Inbox (Conversations)** | ✅ Completed | 🟩 100% | [INBOX_PLAN](INBOX_IMPLEMENTATION_PLAN.md) <br> [DO_ARCH](DURABLE_OBJECTS_COMPREHENSIVE_PLAN.md) | Conversation DO |
-| **3. Campaigns (Outbound)** | ✅ Completed | 🟩 100% | [CAMPAIGN_PLAN](CAMPAIGN_MANAGEMENT_PLAN.md) | Queues, Campaign DO |
+| **3. Campaigns (Outbound)** | 🚧 Partial | 🟧 50% | [CAMPAIGN_PLAN](CAMPAIGN_MANAGEMENT_PLAN.md) | Queues, Campaign DO (Stub) |
 | **4. Knowledge Base** | ✅ Completed | 🟩 100% | [RAG_PLAN](RAG_IMPLEMENTATION_PLAN.md) | Vectorize, Workers AI |
 | **5. Contacts (CRM)** | ✅ Completed | 🟩 100% | [CUSTOMER_PLAN](CUSTOMER_DURABLE_OBJECT_PLAN.md) | Customer DO, SQLite |
 | **6. Channels** | ✅ Completed | 🟩 100% | [EMAIL_PLAN](EMAIL_IMPLEMENTATION_PLAN.md) <br> [VOICE_PLAN](CUSTOMER_DURABLE_OBJECT_PLAN.md) | Resend, Twilio |
 | **7. Global AI Agent** | ✅ Completed | 🟩 100% | [RAG_PLAN](RAG_IMPLEMENTATION_PLAN.md) | Qwen, RAG |
 | **8. Brand Management** | ✅ Completed | 🟩 100% | [TENANT_PLAN](TENANT_DURABLE_OBJECT_PLAN.md) | Tenant DO |
-| **9. Workflow Automation** | ✅ Completed | 🟩 100% | [WORKFLOW_PLAN](WORKFLOW_IMPLEMENTATION_PLAN.md) | React Flow |
+| **9. Workflow Automation** | 🚧 Partial | 🟧 40% | [WORKFLOW_PLAN](WORKFLOW_IMPLEMENTATION_PLAN.md) | React Flow, Workflow DO (Stub) |
 | **10. User Management** | ✅ Completed | 🟩 100% | [TENANT_PLAN](TENANT_DURABLE_OBJECT_PLAN.md) | Tenant DO |
 | **11. Voice Bots** | 📝 Planned | ⬜ 0% | [VOICE_BOT_PLAN](VOICE_BOT_IMPLEMENTATION_PLAN.md) | OpenAI Realtime |
 | **12. APIs & Integrations** | ✅ Completed | 🟩 100% | [TENANT_PLAN](TENANT_DURABLE_OBJECT_PLAN.md) | Tenant DO |
@@ -24,11 +24,42 @@ This document tracks the implementation status of all key product modules.
 
 ## 🚀 Immediate Priorities
 
-The following modules are planned but have not been started. Select one to begin implementation:
+The following modules need implementation or completion:
 
-1.  **Inbox**: Critical for agent-customer interaction. Relies on `ConversationDO`.
-2.  **Dashboard**: Provides visibility into system activity.
-3.  **Tenant/User Management**: Essential for multi-tenancy and security.
+1.  **Voice Bots**: **Critical**. Zero implementation. Needs `VoiceSessionDO` and OpenAI Realtime integration.
+2.  **Campaigns Backend**: UI is ready, but `CampaignDO` is a stub. Needs scheduling and execution logic.
+3.  **Workflow Backend**: UI is ready, but `WorkflowDO` is a stub. Needs execution engine.
+
+---
+
+## 🛑 Remaining Implementation Tasks (Placeholders)
+
+This list maps out all currently unimplemented or stubbed features that need to be prioritized.
+
+### 1. Voice Bots (Prioritized)
+- **Status**: 0% Implemented (Planned).
+- **Missing**:
+    - `VoiceSessionDurableObject.ts`: Core logic for managing voice sessions.
+    - WebSocket Handler: To bridge client audio with backend.
+    - OpenAI Realtime API Integration: For TTS and STT and Agent logic.
+    - Frontend UI: Voice bot configuration and testing interface.
+
+### 2. Campaigns (Outbound)
+- **Status**: Backend Stubbed.
+- **Missing**:
+    - `CampaignDO.processNextBatch()`: Logic to fetch audience and dispatch messages is missing.
+    - `CampaignDO` Storage: State management for campaign progress is not fully implemented.
+    - Integration with `email-queue` or `voice-queue` for actual sending.
+
+### 3. Workflow Automation
+- **Status**: Backend Stubbed.
+- **Missing**:
+    - `WorkflowDO.executeWorkflow()`: The logic to parse the workflow JSON and execute steps is just a log statement.
+    - Step Handlers: Logic for specific workflow steps (Wait, Send Message, Condition) is missing.
+    - Trigger System: Event listeners to auto-start workflows are not wired up.
+
+### 4. Minor / Cleanup
+- **Inbox**: Ensure real-time WebSocket connection is fully robust (currently seems implemented but relies on `conversationService`).
 
 ---
 

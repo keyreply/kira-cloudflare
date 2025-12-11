@@ -6,7 +6,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) system 
 ## Files Created
 
 ### 1. Core Service
-**Location:** `/Users/keyreply/ai/ppp-academy/worker/src/services/rag.js`
+**Location:** `/Users/keyreply/ai/keyreply-kira/worker/src/services/rag.js`
 
 Complete RAG service implementation with the following functions:
 
@@ -35,7 +35,7 @@ Complete RAG service implementation with the following functions:
 - Queue-based async processing
 
 ### 2. API Routes
-**Location:** `/Users/keyreply/ai/ppp-academy/worker/src/routes/documents.js`
+**Location:** `/Users/keyreply/ai/keyreply-kira/worker/src/routes/documents.js`
 
 REST API endpoints using Hono framework:
 
@@ -61,7 +61,7 @@ REST API endpoints using Hono framework:
 - Usage tracking
 
 ### 3. Integration
-**Location:** `/Users/keyreply/ai/ppp-academy/worker/src/index.js`
+**Location:** `/Users/keyreply/ai/keyreply-kira/worker/src/index.js`
 
 **Changes made:**
 1. Added `documentsRouter` import
@@ -76,7 +76,7 @@ REST API endpoints using Hono framework:
 - Delegates to RAG service for processing
 
 ### 4. Database Migration
-**Location:** `/Users/keyreply/ai/ppp-academy/worker/migrations/003_create_documents_tables.sql`
+**Location:** `/Users/keyreply/ai/keyreply-kira/worker/migrations/003_create_documents_tables.sql`
 
 **Tables:**
 - `documents` - Document metadata
@@ -89,7 +89,7 @@ REST API endpoints using Hono framework:
   - Foreign key: document_id references documents(id) ON DELETE CASCADE
 
 ### 5. Documentation
-**Location:** `/Users/keyreply/ai/ppp-academy/worker/src/services/RAG_DOCUMENTATION.md`
+**Location:** `/Users/keyreply/ai/keyreply-kira/worker/src/services/RAG_DOCUMENTATION.md`
 
 Comprehensive documentation covering:
 - Architecture overview with diagrams
@@ -105,7 +105,7 @@ Comprehensive documentation covering:
 - Future enhancements
 
 ### 6. Quick Start Guide
-**Location:** `/Users/keyreply/ai/ppp-academy/worker/RAG_QUICKSTART.md`
+**Location:** `/Users/keyreply/ai/keyreply-kira/worker/RAG_QUICKSTART.md`
 
 Quick reference guide with:
 - Setup instructions
@@ -120,7 +120,7 @@ Quick reference guide with:
 - Security checklist
 
 ### 7. Configuration Example
-**Location:** `/Users/keyreply/ai/ppp-academy/worker/wrangler.toml.example`
+**Location:** `/Users/keyreply/ai/keyreply-kira/worker/wrangler.toml.example`
 
 Complete wrangler.toml configuration with:
 - Workers AI binding
@@ -133,7 +133,7 @@ Complete wrangler.toml configuration with:
 - Deployment settings
 
 ### 8. Package Dependencies
-**Location:** `/Users/keyreply/ai/ppp-academy/worker/package.json`
+**Location:** `/Users/keyreply/ai/keyreply-kira/worker/package.json`
 
 **Added dependency:**
 - `nanoid: ^5.0.7` - For generating unique document IDs
@@ -226,7 +226,7 @@ Return with Sources
 
 ### Upload Document
 ```bash
-curl -X POST https://api.ppp-academy.com/documents/upload \
+curl -X POST https://api.kira.keyreply.com/documents/upload \
   -H "Authorization: Bearer TOKEN" \
   -F "file=@document.pdf" \
   -F "title=My Document"
@@ -234,7 +234,7 @@ curl -X POST https://api.ppp-academy.com/documents/upload \
 
 ### Search Documents
 ```bash
-curl -X POST https://api.ppp-academy.com/documents/search \
+curl -X POST https://api.kira.keyreply.com/documents/search \
   -H "Authorization: Bearer TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"query": "password reset", "limit": 5}'
@@ -242,7 +242,7 @@ curl -X POST https://api.ppp-academy.com/documents/search \
 
 ### Ask Question (RAG)
 ```bash
-curl -X POST https://api.ppp-academy.com/documents/ask \
+curl -X POST https://api.kira.keyreply.com/documents/ask \
   -H "Authorization: Bearer TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"query": "What is the refund policy?"}'
@@ -265,9 +265,9 @@ curl -X POST https://api.ppp-academy.com/documents/ask \
 
 2. **Create Cloudflare resources**
    ```bash
-   wrangler vectorize create ppp-academy-embeddings --dimensions=768 --metric=cosine
-   wrangler r2 bucket create ppp-academy-documents
-   wrangler queues create ppp-academy-documents
+   wrangler vectorize create keyreply-kira-embeddings --dimensions=768 --metric=cosine
+   wrangler r2 bucket create keyreply-kira-documents
+   wrangler queues create keyreply-kira-documents
    ```
 
 3. **Configure wrangler.toml**
@@ -277,7 +277,7 @@ curl -X POST https://api.ppp-academy.com/documents/ask \
 
 4. **Run database migrations**
    ```bash
-   wrangler d1 execute ppp-academy-db --file=migrations/003_create_documents_tables.sql
+   wrangler d1 execute keyreply-kira-db --file=migrations/003_create_documents_tables.sql
    ```
 
 5. **Deploy worker**

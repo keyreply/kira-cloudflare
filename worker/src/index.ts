@@ -38,8 +38,7 @@ import emailRouter from './routes/email.ts';
 import campaignsRouter from './routes/campaigns.ts';
 import workflowsRouter from './routes/workflows.ts';
 import channelsRouter from './routes/channels.ts';
-import { processDocumentQueue } from './services/rag.ts';
-import { processAnalyticsQueue } from './services/AnalyticsService.ts';
+import functionRouter from './routes/functionRouter.ts';
 import { sendEmail, getEmailTemplate } from './services/email.ts';
 
 // Import AI configuration
@@ -145,6 +144,7 @@ app.route('/upload', uploadRouter);
 app.route('/campaigns', campaignsRouter);
 app.route('/workflows', workflowsRouter);
 app.route('/channels', channelsRouter);
+app.route('/functions', functionRouter);
 
 // Mount analytics route
 app.route('/analytics', analyticsRouter);

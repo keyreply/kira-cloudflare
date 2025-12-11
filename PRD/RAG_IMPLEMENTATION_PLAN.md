@@ -92,16 +92,16 @@ This plan implements a fully **Cloudflare-native**, **multi-tenant** Retrieval-A
 
 ```bash
 # Create R2 bucket for documents (shared, isolated by path)
-npx wrangler r2 bucket create ppp-academy-docs
+npx wrangler r2 bucket create keyreply-kira-docs
 
 # Create Vectorize index (shared, isolated by namespace)
-npx wrangler vectorize create ppp-academy-vectors --dimensions=768 --metric=cosine
+npx wrangler vectorize create keyreply-kira-vectors --dimensions=768 --metric=cosine
 
 # Create D1 database for metadata
-npx wrangler d1 create ppp-academy-db
+npx wrangler d1 create keyreply-kira-db
 
 # Create Queue for async processing
-npx wrangler queues create ppp-academy-processor
+npx wrangler queues create keyreply-kira-processor
 ```
 
 #### 1.2 D1 Schema (Multi-Tenant)
@@ -752,7 +752,7 @@ const app = new Hono();
 
 // CORS
 app.use('/*', cors({
-  origin: ['https://ppp-academy.pages.dev', 'http://localhost:5173'],
+  origin: ['https://keyreply-kira.pages.dev', 'http://localhost:5173'],
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -785,7 +785,7 @@ export default app;
 ### Phase 8: wrangler.toml Configuration
 
 ```toml
-name = "ppp-academy-api"
+name = "keyreply-kira-api"
 main = "src/index.js"
 compatibility_date = "2025-11-27"
 account_id = "2e25a3c929c0317b8c569a9e7491cf78"
@@ -793,27 +793,27 @@ account_id = "2e25a3c929c0317b8c569a9e7491cf78"
 # R2 Bucket binding (shared bucket, isolated by user path)
 [[r2_buckets]]
 binding = "DOCS_BUCKET"
-bucket_name = "ppp-academy-docs"
+bucket_name = "keyreply-kira-docs"
 
 # Vectorize binding (shared index, isolated by namespace)
 [[vectorize]]
 binding = "VECTORIZE"
-index_name = "ppp-academy-vectors"
+index_name = "keyreply-kira-vectors"
 
 # D1 Database binding
 [[d1_databases]]
 binding = "DB"
-database_name = "ppp-academy-db"
+database_name = "keyreply-kira-db"
 database_id = "<your-database-id>"
 
 # Queue producer
 [[queues.producers]]
 binding = "DOC_PROCESSOR"
-queue = "ppp-academy-processor"
+queue = "keyreply-kira-processor"
 
 # Queue consumer
 [[queues.consumers]]
-queue = "ppp-academy-processor"
+queue = "keyreply-kira-processor"
 max_batch_size = 10
 max_batch_timeout = 30
 
@@ -823,7 +823,7 @@ binding = "AI"
 
 # Environment variables
 [vars]
-CORS_ORIGIN = "https://ppp-academy.pages.dev"
+CORS_ORIGIN = "https://keyreply-kira.pages.dev"
 ```
 
 ## File Structure
@@ -917,13 +917,13 @@ src/
 
 ```bash
 # 1. Create infrastructure
-npx wrangler r2 bucket create ppp-academy-docs
-npx wrangler vectorize create ppp-academy-vectors --dimensions=768 --metric=cosine
-npx wrangler d1 create ppp-academy-db
-npx wrangler queues create ppp-academy-processor
+npx wrangler r2 bucket create keyreply-kira-docs
+npx wrangler vectorize create keyreply-kira-vectors --dimensions=768 --metric=cosine
+npx wrangler d1 create keyreply-kira-db
+npx wrangler queues create keyreply-kira-processor
 
 # 2. Apply D1 schema
-npx wrangler d1 execute ppp-academy-db --remote --file=./schema.sql
+npx wrangler d1 execute keyreply-kira-db --remote --file=./schema.sql
 
 # 3. Deploy worker
 cd worker && bun install && bun run deploy

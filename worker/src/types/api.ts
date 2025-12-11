@@ -268,3 +268,26 @@ export interface SendEmailRequest {
   text?: string;
   metadata?: Record<string, unknown>;
 }
+
+// ============================================
+// Platform Function Endpoints
+// ============================================
+
+export interface PlatformFunctionMetadata {
+  created_at: number;
+  updated_at: number;
+  description?: string;
+  tags?: string[];
+  created_by?: string;
+}
+
+export interface PlatformFunction {
+  name: string;
+  script: string;
+  metadata: PlatformFunctionMetadata;
+}
+
+export interface UpdateFunctionRequest {
+  script: string;
+  metadata?: Partial<PlatformFunctionMetadata>;
+}

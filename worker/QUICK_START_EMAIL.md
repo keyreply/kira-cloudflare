@@ -57,7 +57,7 @@ import { sendPasswordResetEmail } from './services/email.js';
 await sendPasswordResetEmail(env, {
   to: 'user@example.com',
   name: 'John Doe',
-  resetLink: 'https://app.ppp-academy.com/reset?token=xyz',
+  resetLink: 'https://app.kira.keyreply.com/reset?token=xyz',
   expiresIn: '1 hour'
 });
 ```

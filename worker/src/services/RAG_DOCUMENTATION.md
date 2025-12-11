@@ -473,28 +473,28 @@ binding = "AI"
 # Vectorize (vector database)
 [[vectorize]]
 binding = "VECTORIZE"
-index_name = "ppp-academy-embeddings"
+index_name = "keyreply-kira-embeddings"
 dimensions = 768  # for bge-base-en-v1.5
 metric = "cosine"
 
 # R2 (file storage)
 [[r2_buckets]]
 binding = "DOCS_BUCKET"
-bucket_name = "ppp-academy-documents"
+bucket_name = "keyreply-kira-documents"
 
 # D1 (metadata database)
 [[d1_databases]]
 binding = "DB"
-database_name = "ppp-academy-db"
+database_name = "keyreply-kira-db"
 database_id = "your-database-id"
 
 # Queue (document processing)
 [[queues.producers]]
 binding = "DOCUMENT_QUEUE"
-queue = "ppp-academy-documents"
+queue = "keyreply-kira-documents"
 
 [[queues.consumers]]
-queue = "ppp-academy-documents"
+queue = "keyreply-kira-documents"
 max_batch_size = 10
 max_batch_timeout = 30
 max_retries = 3
@@ -504,18 +504,18 @@ max_retries = 3
 
 ```bash
 # Create Vectorize index
-wrangler vectorize create ppp-academy-embeddings \
+wrangler vectorize create keyreply-kira-embeddings \
   --dimensions=768 \
   --metric=cosine
 
 # Create R2 bucket
-wrangler r2 bucket create ppp-academy-documents
+wrangler r2 bucket create keyreply-kira-documents
 
 # Create D1 database
-wrangler d1 create ppp-academy-db
+wrangler d1 create keyreply-kira-db
 
 # Create queue
-wrangler queues create ppp-academy-documents
+wrangler queues create keyreply-kira-documents
 ```
 
 ## Usage Examples
@@ -523,7 +523,7 @@ wrangler queues create ppp-academy-documents
 ### Upload a Document
 
 ```bash
-curl -X POST https://api.ppp-academy.com/documents/upload \
+curl -X POST https://api.kira.keyreply.com/documents/upload \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -F "file=@document.pdf" \
   -F "title=Product Documentation" \
@@ -535,7 +535,7 @@ curl -X POST https://api.ppp-academy.com/documents/upload \
 ### Search Documents
 
 ```bash
-curl -X POST https://api.ppp-academy.com/documents/search \
+curl -X POST https://api.kira.keyreply.com/documents/search \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -548,7 +548,7 @@ curl -X POST https://api.ppp-academy.com/documents/search \
 ### Ask a Question
 
 ```bash
-curl -X POST https://api.ppp-academy.com/documents/ask \
+curl -X POST https://api.kira.keyreply.com/documents/ask \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -656,7 +656,7 @@ All operations logged with:
 ### Queue Monitoring
 ```bash
 # Check queue depth
-wrangler queues consumer worker ppp-academy-documents
+wrangler queues consumer worker keyreply-kira-documents
 
 # View queue messages
 wrangler tail --format json
@@ -687,6 +687,6 @@ wrangler tail --format json
 ## Support
 
 For issues or questions:
-- GitHub Issues: [ppp-academy/issues](https://github.com/ppp-academy/issues)
-- Documentation: [docs.ppp-academy.com](https://docs.ppp-academy.com)
-- Email: support@ppp-academy.com
+- GitHub Issues: [keyreply-kira/issues](https://github.com/keyreply-kira/issues)
+- Documentation: [docs.kira.keyreply.com](https://docs.kira.keyreply.com)
+- Email: support@kira.keyreply.com
