@@ -265,11 +265,18 @@ chat.post('/stream', async (c) => {
   const {
     messages,
     context,
-    knowledgeSource = 'all'
+    knowledgeSource = 'all',
+    pageInfo
   } = body as {
     messages: Array<{ id: string; role: 'user' | 'assistant' | 'system'; content?: string; parts?: Array<{ type: string; text?: string }> }>;
     context?: string;
     knowledgeSource?: KnowledgeSource;
+    pageInfo?: {
+      page: string;
+      view: string;
+      description: string;
+      features: string[];
+    };
   };
 
   if (!messages || messages.length === 0) {
@@ -352,6 +359,15 @@ chat.post('/stream', async (c) => {
         ? "both your personal knowledge base and Kira's documentation"
         : "your personal knowledge base";
 
+    // Build page context section
+    let pageContextSection = '';
+    if (pageInfo) {
+      pageContextSection = `
+CURRENT PAGE: ${pageInfo.page}
+PAGE DESCRIPTION: ${pageInfo.description}
+${pageInfo.features.length > 0 ? `AVAILABLE FEATURES: ${pageInfo.features.join(', ')}` : ''}`;
+    }
+
     let systemPrompt = `You are Kira, an intelligent AI assistant for KeyReply Kira.
 
 Your role is to help users by providing accurate, helpful responses based on ${sourceDescription}.
@@ -362,9 +378,11 @@ INSTRUCTIONS:
 - Be professional, concise, and helpful
 - Format responses with markdown when appropriate
 - If you're unsure about something, say so clearly
+- Use the current page context to provide relevant assistance
+- If the user asks about features on the current page, reference the available features
 ${source === 'self' ? '- When answering about Kira features, be specific about implementation details\n- Reference file paths when discussing code structure' : ''}
-
-CURRENT PAGE CONTEXT: ${context || 'General'}`;
+${pageContextSection}
+ADDITIONAL CONTEXT: ${context || 'General'}`;
 
     // Add RAG context if available
     if (ragContext) {

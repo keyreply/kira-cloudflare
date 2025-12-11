@@ -1,37 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import FloatingButton from './FloatingButton';
 import AgentPanel from './AgentPanel';
+import { usePageContext, formatContextForAI } from '../../contexts/PageContext';
 
 const GlobalAIAgent = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [currentView, setCurrentView] = useState('chat'); // 'chat' | 'knowledge'
+    const [currentView, setCurrentView] = useState<'chat' | 'knowledge'>('chat');
 
-    // Context awareness mock
-    const [context, setContext] = useState({
-        page: 'Unknown',
-        data: null
-    });
+    // Get page context from the PageContextProvider
+    const { pageInfo } = usePageContext();
 
-    useEffect(() => {
-        // Simple mock to detect page changes
-        const updateContext = () => {
-            const path = window.location.pathname;
-            let pageName = 'Dashboard';
-            if (path.includes('inbox')) pageName = 'Inbox';
-            else if (path.includes('reports')) pageName = 'Financial Reports';
-
-            setContext({
-                page: pageName,
-                url: window.location.href,
-                timestamp: new Date().toISOString()
-            });
-        };
-
-        updateContext();
-        window.addEventListener('popstate', updateContext);
-        return () => window.removeEventListener('popstate', updateContext);
-    }, []);
+    // Format context for the agent panel
+    const context = {
+        page: pageInfo.page,
+        view: pageInfo.view,
+        description: pageInfo.description,
+        features: pageInfo.features,
+        url: window.location.href,
+        timestamp: new Date().toISOString(),
+        // Include any page-specific data
+        data: pageInfo.data,
+        // Pre-formatted context string for the AI
+        formattedContext: formatContextForAI(pageInfo)
+    };
 
     const toggleOpen = () => setIsOpen(!isOpen);
 

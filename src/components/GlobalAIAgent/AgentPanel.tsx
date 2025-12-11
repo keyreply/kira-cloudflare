@@ -55,16 +55,23 @@ const KNOWLEDGE_SOURCES: Array<{
     }
 ];
 
+interface PageContext {
+    page: string;
+    view: string;
+    description: string;
+    features: string[];
+    url?: string;
+    timestamp?: string;
+    data?: Record<string, unknown>;
+    formattedContext?: string;
+}
+
 interface AgentPanelProps {
     isOpen: boolean;
     onClose: () => void;
     currentView: 'chat' | 'knowledge';
     setCurrentView: (view: 'chat' | 'knowledge') => void;
-    context: {
-        page: string;
-        url?: string;
-        timestamp?: string;
-    };
+    context: PageContext;
 }
 
 const AgentPanel: React.FC<AgentPanelProps> = ({
@@ -96,8 +103,16 @@ const AgentPanel: React.FC<AgentPanelProps> = ({
     } = useChat({
         api: `${API_BASE_URL}/chat/stream`,
         body: {
-            context: context.page,
-            knowledgeSource
+            // Send the full formatted context to the API
+            context: context.formattedContext || context.page,
+            knowledgeSource,
+            // Include additional page metadata
+            pageInfo: {
+                page: context.page,
+                view: context.view,
+                description: context.description,
+                features: context.features
+            }
         },
         initialMessages: [
             {
@@ -295,9 +310,14 @@ const AgentPanel: React.FC<AgentPanelProps> = ({
                 >
                     {/* Context Banner with Knowledge Source Selector */}
                     <div className="bg-indigo-50/50 px-4 py-2 text-xs text-indigo-600 flex items-center justify-between border-b border-indigo-100/50">
-                        <div className="flex items-center gap-2">
-                            <SparklesIcon className="w-3 h-3" />
-                            <span>Viewing: <strong>{context.page}</strong></span>
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <SparklesIcon className="w-3 h-3 shrink-0" />
+                            <div className="truncate">
+                                <span className="font-medium">{context.page}</span>
+                                {context.description && (
+                                    <span className="text-indigo-400 ml-1 hidden sm:inline">• {context.description}</span>
+                                )}
+                            </div>
                         </div>
 
                         {/* Knowledge Source Selector */}

@@ -17,16 +17,38 @@ import Testing from './components/Testing/Testing';
 import WidgetSettings from './components/Widget/WidgetSettings';
 import Settings from './components/Settings/Settings';
 import LogoDemo from './components/Logo/LogoDemo';
+import { PageContextProvider, usePageContext, PAGE_METADATA } from './contexts/PageContext';
 import { allConversationData } from './data/conversations';
 import { generateAIResponse } from './utils/ai';
 import { api } from './services/api';
 import { conversationService } from './services/conversationService';
 
-function App() {
+// Inner component that uses PageContext
+function AppContent() {
   const [isInboxOpen, setIsInboxOpen] = useState(true);
   const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
 
   const [currentView, setCurrentView] = useState('conversations');
+  const { setPageInfo, setPageData } = usePageContext();
+
+  // Sync current view with PageContext
+  useEffect(() => {
+    const metadata = PAGE_METADATA[currentView];
+    if (metadata) {
+      setPageInfo({
+        ...metadata,
+        data: {}
+      });
+    } else {
+      setPageInfo({
+        page: currentView.charAt(0).toUpperCase() + currentView.slice(1),
+        view: currentView,
+        description: 'Application page',
+        features: [],
+        data: {}
+      });
+    }
+  }, [currentView, setPageInfo]);
   const [interactionMode, setInteractionMode] = useState('interactive');
   const [selectedScenario, setSelectedScenario] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
@@ -470,6 +492,15 @@ function App() {
       {/* Global AI Agent */}
       <GlobalAIAgent />
     </div >
+  );
+}
+
+// Main App component that provides PageContext
+function App() {
+  return (
+    <PageContextProvider>
+      <AppContent />
+    </PageContextProvider>
   );
 }
 
