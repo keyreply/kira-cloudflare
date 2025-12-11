@@ -9,7 +9,9 @@ import {
     Cog6ToothIcon,
     UserCircleIcon,
     StarIcon,
-    PhoneIcon
+    PhoneIcon,
+    PuzzlePieceIcon,
+    BeakerIcon
 } from '@heroicons/react/24/outline';
 
 export function Sidebar({ currentView, setCurrentView }) {
@@ -17,6 +19,8 @@ export function Sidebar({ currentView, setCurrentView }) {
         { id: 'dashboard', icon: HomeIcon, label: 'Dashboard' },
         { id: 'conversations', icon: ChatBubbleLeftRightIcon, label: 'Inbox', badge: 4 },
         { id: 'campaigns', icon: PhoneIcon, label: 'Campaigns' },
+        { id: 'workflows', label: 'Workflows', icon: PuzzlePieceIcon },
+        { id: 'testing', label: 'Testing', icon: BeakerIcon },
         { id: 'knowledge', icon: BookOpenIcon, label: 'Knowledge' },
         { id: 'channels', icon: SignalIcon, label: 'Channels' },
         { id: 'widget', icon: ChatBubbleOvalLeftEllipsisIcon, label: 'Widget' },
@@ -59,12 +63,22 @@ export function Sidebar({ currentView, setCurrentView }) {
 
             {/* Bottom Section */}
             <div className="p-3 border-t border-slate-100 space-y-1">
-                <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-colors">
-                    <Cog6ToothIcon className="w-5 h-5 text-slate-400" />
+                <div
+                    onClick={() => setCurrentView('settings')}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${currentView === 'settings'
+                        ? 'bg-blue-50 text-blue-600'
+                        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}
+                >
+                    <Cog6ToothIcon className="w-5 h-5" />
                     <span className="text-sm font-medium">Settings</span>
                 </div>
-                <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-colors">
-                    <UserCircleIcon className="w-5 h-5 text-slate-400" />
+                <div
+                    onClick={() => setCurrentView('profile')} // Profile can map to settings or separate view
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${currentView === 'profile'
+                        ? 'bg-blue-50 text-blue-600'
+                        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}
+                >
+                    <UserCircleIcon className="w-5 h-5" />
                     <span className="text-sm font-medium">Profile</span>
                 </div>
             </div>

@@ -23,6 +23,8 @@ import chatRouter from './routes/chat.js';
 import uploadRouter from './routes/upload.js';
 import emailRouter from './routes/email.js';
 import campaignsRouter from './routes/campaigns.js';
+import workflowsRouter from './routes/workflows.js';
+import channelsRouter from './routes/channels.js';
 import { processDocumentQueue } from './services/rag.js';
 import { processAnalyticsQueue } from './services/AnalyticsService.js';
 import { sendEmail, getEmailTemplate } from './services/email.js';
@@ -127,6 +129,8 @@ app.route('/stt', sttRouter);
 app.route('/chat', chatRouter);
 app.route('/upload', uploadRouter);
 app.route('/campaigns', campaignsRouter);
+app.route('/workflows', workflowsRouter);
+app.route('/channels', channelsRouter);
 
 // Mount analytics route
 app.route('/analytics', analyticsRouter);
@@ -438,6 +442,9 @@ export { AnalyticsDO } from './durable-objects/AnalyticsDO.js';
 
 // Campaigns
 export { CampaignDO } from './durable-objects/CampaignDO.js';
+
+// Workflows
+export { WorkflowDO } from './durable-objects/WorkflowDO.js';
 
 // ============================================
 // Worker Exports

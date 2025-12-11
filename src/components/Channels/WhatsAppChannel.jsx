@@ -1,9 +1,54 @@
-import React, { useState } from 'react';
-import { ArrowLeftIcon, BookOpenIcon, ArrowTopRightOnSquareIcon, XMarkIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline';
+import { api } from '../../services/api';
 
 const WhatsAppChannel = ({ onBack }) => {
     const [showProfileModal, setShowProfileModal] = useState(false);
     const [switchToWhatsApp, setSwitchToWhatsApp] = useState(false);
+    const [businessProfile, setBusinessProfile] = useState({});
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        loadSettings();
+    }, []);
+
+    const loadSettings = async () => {
+        try {
+            const data = await api.channels.list();
+            const config = data.channels?.whatsapp?.config || {};
+            setSwitchToWhatsApp(data.channels?.whatsapp?.isEnabled || false);
+            setBusinessProfile(config.profile || {});
+        } catch (error) {
+            console.error("Error loading WhatsApp settings:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSaveProfile = async (newProfile) => {
+        try {
+            await api.channels.update('whatsapp', {
+                isEnabled: switchToWhatsApp,
+                config: { profile: newProfile }
+            });
+            setShowProfileModal(false);
+            setBusinessProfile(newProfile);
+        } catch (error) {
+            console.error("Error saving WhatsApp profile:", error);
+        }
+    };
+
+    const toggleChannel = async () => {
+        const newState = !switchToWhatsApp;
+        setSwitchToWhatsApp(newState);
+        try {
+            await api.channels.update('whatsapp', {
+                isEnabled: newState,
+                config: { profile: businessProfile }
+            });
+        } catch (error) {
+            console.error("Error updating channel status:", error);
+            setSwitchToWhatsApp(!newState); // Revert
+        }
+    };
 
     return (
         <div className="flex-1 flex flex-col h-full bg-gray-50 font-sans relative">
@@ -59,7 +104,7 @@ const WhatsAppChannel = ({ onBack }) => {
                         <div className="flex items-center gap-3">
                             <span className="text-sm text-gray-900 font-medium">Enable WhatsApp transition</span>
                             <button
-                                onClick={() => setSwitchToWhatsApp(!switchToWhatsApp)}
+                                onClick={toggleChannel}
                                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${switchToWhatsApp ? 'bg-blue-600' : 'bg-gray-200'}`}
                             >
                                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${switchToWhatsApp ? 'translate-x-6' : 'translate-x-1'}`} />
@@ -100,23 +145,41 @@ const WhatsAppChannel = ({ onBack }) => {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-900 mb-2">Business Email</label>
-                                <input type="email" placeholder="contact@company.com" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" />
+                                <input
+                                    type="email"
+                                    value={businessProfile.email || ''}
+                                    onChange={(e) => setBusinessProfile({ ...businessProfile, email: e.target.value })}
+                                    placeholder="contact@company.com"
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                                />
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-900 mb-2">Business Address</label>
-                                <input type="text" placeholder="123 Main Street, City, Country" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" />
+                                <input
+                                    type="text"
+                                    value={businessProfile.address || ''}
+                                    onChange={(e) => setBusinessProfile({ ...businessProfile, address: e.target.value })}
+                                    placeholder="123 Main Street, City, Country"
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                                />
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-900 mb-2">Business Description</label>
-                                <textarea rows={3} placeholder="Describe your products or services" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none" />
+                                <textarea
+                                    rows={3}
+                                    value={businessProfile.description || ''}
+                                    onChange={(e) => setBusinessProfile({ ...businessProfile, description: e.target.value })}
+                                    placeholder="Describe your products or services"
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
+                                />
                             </div>
                         </div>
 
                         <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
                             <button onClick={() => setShowProfileModal(false)} className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg border border-gray-200 bg-white">Cancel</button>
-                            <button onClick={() => setShowProfileModal(false)} className="px-4 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-lg">Save</button>
+                            <button onClick={() => handleSaveProfile(businessProfile)} className="px-4 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-lg">Save</button>
                         </div>
                     </div>
                 </div>

@@ -164,6 +164,22 @@ class ApiClient {
         status: (id) => this.get(`/campaigns/${id}/status`)
     };
 
+    /* Workflows */
+    workflows = {
+        list: () => this.get('/workflows'),
+        get: (id) => this.get(`/workflows/${id}`),
+        create: (data) => this.post('/workflows', data),
+        update: (id, data) => this.put(`/workflows/${id}`, data),
+        update: (id, data) => this.put(`/workflows/${id}`, data),
+        test: (id) => this.post(`/workflows/${id}/test`)
+    };
+
+    /* Channels */
+    channels = {
+        list: () => this.get('/channels'),
+        update: (type, data) => this.put(`/channels/${type}`, data)
+    };
+
     /* Auth */
     auth = {
         login: (credentials) => this.post('/auth/login', credentials),
